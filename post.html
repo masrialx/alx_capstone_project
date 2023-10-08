@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style/header.css">
+    <link rel="stylesheet" href="style/post.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post</title>
+</head>
+<body>
+    <header>
+     <div class="header">
+        <div class="headers" id="headersx">
+            <div class="logo">
+                <img src="./image/Logo (2).svg" alt="logo">
+            </div>
+            <div class="list" id="list">
+                <ul id="act">
+                    <a href="./home.html"><li class="active">Home</li></a>
+                    <a href="./post.html"><li>Post</li></a>
+                    <a href="./contact.html"><li>Contact</li></a>
+                    <a href="./login.html" class="login" id="login">Login</a>
+                  
+                </ul>
+                <div class="listbtn">
+                        <img src="./image/list-ul-alt-svgrepo-com.svg" alt="btn" id="imglist">
+                </div>
+            </div>
+        </div>
+     </div>
+
+    </header>
+ 
+    <main>
+     
+        <div class="containerx">
+            <h1 class="post-title">Create a New Post</h1>
+            <form class="post-form">
+                <label for="category" class="post-label">Category:</label>
+                <select id="category" name="category" class="post-select">
+                    <option value="Design">Design</option>
+                    <option value="Tech">Tech</option>
+                    <option value="Website">Website</option>
+                </select>
+                <br>
+    
+                <label for="title" class="post-label">Title:</label>
+                <input type="text" id="title" name="title" required class="post-input">
+                <br>
+    
+                <label for="description" class="post-label">Description:</label>
+                <textarea id="description" name="description" required class="post-textarea"></textarea>
+                <br>
+    
+                <label for="image" class="post-label">Image:</label>
+                <input type="file" id="image" name="image" accept="image/*" onchange="displayImage()" class="post-input">
+                <br>
+                <div class="image-preview">
+                    <img id="image-preview" src="" alt="Image Preview" class="post-image">
+                </div>
+                <br>
+    
+                <input type="submit" value="Create Post" class="post-button">
+            </form>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="social-icons">
+                <a href="https://t.me/Masri404" target="_blank"><img src="image/telegram-outline-svgrepo-com.svg" alt=""></a>
+                <a href="https://www.linkedin.com/in/masresha-alemu-851241232"><img src="./image/linkedin-svgrepo-com.svg" alt="LinkedIn"></a>
+                <a href="mailto:masrialemu@gmail.com">
+                    <img src="./image/gmail-svgrepo-com (1).svg" alt="Gmail">
+                </a>
+                <a href="https://github.com/masrialemu"><img src="./image/github-142-svgrepo-com.svg" alt="github"></a>
+            </div>
+            <div class="about-me">
+                <h3>About Me</h3>
+                <p>
+                    Welcome to Technology Blog! I'm Masresha Alemu, your guide to the latest in tech news,
+                    gadgets, and digital trends. Join me on this journey as we explore the exciting world of technology.
+                </p>
+            </div>
+            <p>&copy; 2023 Technology Blog</p>
+        </div>
+    </footer>
+    
+
+    <script src="./script/home.js"></script>
+</body>
+</html>

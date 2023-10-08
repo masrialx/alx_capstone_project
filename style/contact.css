@@ -1,0 +1,58 @@
+.containery {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
+}
+
+.contact{
+    min-height: 70vh;
+}
+.contact-title {
+    text-align: center;
+    color: #333;
+}
+
+.contact-form {
+    margin-top: 20px;
+}
+
+.contact-label, .contact-input, .contact-textarea {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.contact-input[type="email"], .contact-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.contact-button {
+    display: block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #07406e;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.success-message, .failure-message {
+    display: none;
+    text-align: center;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #4CAF50; /* Green for success */
+    color: white;
+    border-radius: 4px;
+}
+
+.failure-message {
+    background-color: #f44336; /* Red for failure */
+}

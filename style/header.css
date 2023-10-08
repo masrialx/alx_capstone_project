@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,400;1,400&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Source Sans Pro;
+    list-style: none;
+    box-sizing: border-box;
+}
+a{
+    text-decoration: none;
+}
+
+
+/* ///////////header/////////////////// */
+header{
+    width: 100%;
+    height: 10vh;
+    background-image: url('../image/bk2.jpg');
+    background-position: center;
+    background-size: cover;
+    overflow: hidden;
+}
+.header{
+    width: 100%;
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+}
+.header .headers{
+    width: 80%;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    background-color: transparent;
+    z-index: 999;
+}
+
+.listbtn img{
+    visibility: hidden;
+    position: absolute;
+    width: 70px;
+    height: 40px;
+    
+}
+.header .headers .list ul{
+    visibility: visible;
+    position: relative;
+    right: 50%;
+    height: 100%;
+    align-items: center;
+    display: flex;
+}
+.header .headers .list ul li{
+    font-size: 20px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 20px;
+}
+.header .headers .list .login{
+    font-weight: 600;
+    font-size: 20px;
+    background-color:#07406e;
+    box-shadow: 0 0 5px 1px;
+    color: white;
+    width: 70px;
+    height: 40px;
+    margin-left: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.header .headers .list ul li.active {
+    color: red; /* Change the color to red for the active item */
+}
+
+.header .headers .list .login:hover{
+    background-color:rgb(148, 11, 11);
+}
+.header .headers .list ul li:hover{
+    color: red;
+}
+
+
+footer {
+   
+    background-color:#031829;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Wrap items if the screen width is smaller */
+}
+
+.social-icons a {
+    text-decoration: none;
+    color: #fff;
+    margin-right: 10px;
+}
+
+.about-me {
+    flex: 1;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.about-me h3 {
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.about-me p {
+    font-size: 1rem;
+    color: #ccc;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.about-me {
+    order: 2; /* Reorder the "About Me" section to appear after social icons */
+    flex: 1;
+    margin-top: 20px;
+    padding-left: 20px;
+    border-left: 1px solid #555; /* Add a vertical separator */
+}
+footer{
+    margin-top: 3%;
+}
+.about-me h3 {
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.about-me p {
+    font-size: 1rem;
+    color: #ccc;
+    line-height: 1.5; /* Adjust line height for better readability */
+}
+.social-icons img{
+    width: 40px;
+    height: 40px;
+    color: #fff;
+    background-color: wheat;
+    border-radius: 50%;
+    transition: 0.7s;
+}
+.social-icons img:hover{
+    background-color: red;
+}
+
+/* Media queries for responsiveness */
+
+/* /////////title///////////////////// */
+
+
+@media screen and (max-width:800px){
+    .listbtn img{
+        visibility: visible;
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background-color: aliceblue;
+        top: 3%;
+        right: 5%;
+    }
+    .header .headers .list ul{
+        visibility: hidden;
+        width: 70%;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        z-index: 999;
+        position: fixed;
+        background-color: rebeccapurple;
+    }
+    .header .headers .list .login{
+        margin-top: 10%;
+        position: relative;
+        left: 40px;
+    }
+    .header .headers .list ul li{
+        position: relative;
+        top: 20px;
+        margin: 20px;
+        left: 60px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Stack items vertically on smaller screens */
+    }
+
+    .about-me {
+        order: 1; /* Reorder "About Me" section to appear before social icons on smaller screens */
+        padding-left: 0;
+        border-left: none;
+    }
+
+    .social-icons {
+        margin-top: 20px; /* Add spacing between social icons and "About Me" */
+    }
+}
+
+
+@media screen and (max-width:450px){
+    .header .headers .list ul li{
+        left: 40px;
+    }
+    .header .headers .list .login{
+        left: 20px;
+    }
+   
+}

@@ -1,0 +1,482 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,400;1,400&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Source Sans Pro;
+    list-style: none;
+    box-sizing: border-box;
+}
+a{
+    text-decoration: none;
+}
+
+
+/* ///////////header/////////////////// */
+header{
+    width: 100%;
+    min-height: 90vh;
+    max-height: auto;
+    background-image: url('../image/bk2.jpg');
+    background-position: center;
+    background-size: cover;
+}
+.header{
+    width: 100%;
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+}
+.header .headers{
+    width: 80%;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    background-color: transparent;
+    z-index: 999;
+}
+
+.listbtn img{
+    visibility: hidden;
+    position: absolute;
+    width: 70px;
+    height: 40px;
+    background-color: aliceblue;
+}
+.header .headers .list ul{
+    visibility: visible;
+    position: relative;
+    right: 50%;
+    height: 100%;
+    align-items: center;
+    display: flex;
+}
+.header .headers .list ul li{
+    font-size: 20px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 20px;
+}
+.header .headers .list .login{
+    font-weight: 600;
+    font-size: 20px;
+    background-color:#07406e;
+    box-shadow: 0 0 5px 1px;
+    color: white;
+    width: 70px;
+    height: 40px;
+    margin-left: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.header .headers .list ul li.active {
+    color: red; /* Change the color to red for the active item */
+}
+
+.header .headers .list .login:hover{
+    background-color:rgb(148, 11, 11);
+}
+.header .headers .list ul li:hover{
+    color: red;
+}
+
+
+/* /////////title///////////////////// */
+header .title{
+    width: 100%;
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+header .title .titles{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 70%;
+    min-height: 50%;
+    max-height: 100%;
+    border: 2px solid aliceblue;
+    box-shadow: 0 0 5px 5px;
+    border-radius: 20px;
+}
+header .title .titles button{
+    width: 100px;
+    height: 50px;
+    background-color: #07406e;
+    color: white;
+    font-size: 20px;
+    transition: 0.7s;
+    cursor: pointer;
+    border: none;
+}
+header .title .titles button:hover{
+    background-color: transparent;
+    border: 1px solid white;
+}
+header .title .titles p{
+    width: 95%;
+    font-size: 17px;
+    color: aliceblue;
+    text-align: justify;
+}
+header .title .titles h1{
+    color: white;
+    font-weight: 00;
+}
+
+
+/* ///////////////main/////////////////// */
+
+
+/* Style for the search container */
+.finds {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: #ccc;
+}
+
+/* Style for the search input field */
+.search-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    flex: 1;
+}
+.src{
+    margin-top: 5%;
+    width: 100%;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+}
+
+/* Style for the search button */
+.search-button {
+    background-color: #007BFF; /* Change to your desired button color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    
+}
+
+/* Hover effect for the search button */
+.search-button:hover {
+    background-color:#07406e; /* Change to a darker shade for hover effect */
+}
+
+
+/* Style for the category buttons container */
+.category-buttons {
+    margin-top: 7%;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+/* Style for the category buttons */
+.category-button {
+    background-color: #007BFF; /* Change to your desired button color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+/* Style for the active category button */
+.category-button.active {
+    background-color: #0056b3; /* Change to a darker shade for active effect */
+}
+
+
+/* ////////////data///////////////////////// */
+.data{
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+}
+.data .datas{
+    min-width: 90%;
+    height: auto;
+    border: 1px solid white;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    
+}
+.data .datas .datax{
+    width: 20%; 
+    height: auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background-color:rgba(240, 236, 230, 0.929);
+    padding-bottom: 20px;
+    margin-top: 2%;
+    margin-left: 2%;
+    border-radius: 20px;
+    transform: scale(1);
+    transition: 0.7s;
+}
+.data .datas .datax:hover{
+    transform: scale(1.02);
+}
+.data .datas .imgdata{
+    width: 95%;
+    height: 300px;
+    border-radius: 20px;
+}
+.data .datas .mobile{
+    width: 80%;
+    font-weight: 600;
+    margin: 10px;
+}
+.data .datas .tit{
+    max-width: 80%;
+    display: flex;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 10px;
+}
+.data .datas .date{
+    font-family: "Times New Roman", Times, serif;
+    width: 80%;
+    margin: 10px;
+}
+.data .datas .desc{
+    width: 80%;
+    font-family: 600;
+    cursor: pointer;
+}
+.data .datas .posts{
+    width: 80%;
+    display: flex;
+    align-items: center;
+    margin-top: 2%;
+}
+.data .datas .posts .name{
+   margin-left: 10%;
+   font-weight: 600;
+}
+
+.postimg {
+    border: 1px solid #07406e;
+    height: 40px;
+    border-radius: 50%;
+    width: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Add a box shadow with a slight blur and transparency */
+}
+    
+
+/* /////////footer//////////////// */
+
+/* Footer styles for all media devices */
+footer {
+    background-color:#031829;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Wrap items if the screen width is smaller */
+}
+
+.social-icons a {
+    text-decoration: none;
+    color: #fff;
+    margin-right: 10px;
+}
+
+.about-me {
+    flex: 1;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.about-me h3 {
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.about-me p {
+    font-size: 1rem;
+    color: #ccc;
+}
+
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.about-me {
+    order: 2; /* Reorder the "About Me" section to appear after social icons */
+    flex: 1;
+    margin-top: 20px;
+    padding-left: 20px;
+    border-left: 1px solid #555; /* Add a vertical separator */
+}
+footer{
+    margin-top: 3%;
+}
+.about-me h3 {
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.about-me p {
+    font-size: 1rem;
+    color: #ccc;
+    line-height: 1.5; /* Adjust line height for better readability */
+}
+.social-icons img{
+    width: 40px;
+    height: 40px;
+    color: #fff;
+    background-color: wheat;
+    border-radius: 50%;
+    transition: 0.7s;
+}
+.social-icons img:hover{
+    background-color: red;
+}
+
+/* Media queries for responsiveness */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Stack items vertically on smaller screens */
+    }
+
+    .about-me {
+        order: 1; /* Reorder "About Me" section to appear before social icons on smaller screens */
+        padding-left: 0;
+        border-left: none;
+    }
+
+    .social-icons {
+        margin-top: 20px; /* Add spacing between social icons and "About Me" */
+    }
+}
+
+
+
+/* ///////////////media screen//////////// */
+@media screen and (max-width:1500px){
+    .data .datas{
+        min-width: 100%;
+       
+    }
+    .data .datas .datax{
+        justify-content: center;
+         width: 40%;
+    }
+    .data .datas .tit{
+        position: relative;
+        /* right: 5%; */
+
+    }
+
+@media screen and (max-width:850px){
+    .data .datas{
+        min-width: 100%;
+
+    }
+    .data .datas .datax{
+         width: 40%;
+    }
+}
+
+@media screen and (max-width:700px){
+    .data .datas{
+        min-width: 100%;
+
+    }
+    .data .datas .datax{
+         width: 80%;
+         margin-top: 40px;
+    }
+}
+
+
+@media screen and (max-width:800px){
+    .listbtn img{
+        visibility: visible;
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background-color: aliceblue;
+        top: 3%;
+        right: 5%;
+    }
+    .header .headers .list ul{
+        visibility: hidden;
+        width: 70%;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        z-index: 999;
+        position: fixed;
+        background-color: rebeccapurple;
+    }
+    .header .headers .list .login{
+        margin-top: 10%;
+        position: relative;
+        left: 40px;
+    }
+    .header .headers .list ul li{
+        position: relative;
+        top: 20px;
+        margin: 20px;
+        left: 60px;
+    }
+}
+
+@media screen and (max-width:450px){
+    .header .headers .list ul li{
+        left: 40px;
+    }
+    .header .headers .list .login{
+        left: 20px;
+    }
+   
+}
+@media screen and (max-width:400px){
+    .src{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        width: 100%;
+    }
+    .src .search-input,.search-button{
+        width: 90%;
+    }
+    .category-buttons {
+        flex-wrap: wrap;
+        justify-content: space-between;
+      
+    }
+
+}}
