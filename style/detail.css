@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,400;1,400&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Source Sans Pro;
+    list-style: none;
+    box-sizing: border-box;
+}
+.detail{
+    width: 100%;
+    height: auto;
+}
+.details{
+    width: 90%;
+    height: auto;
+}
+
+.detail #editbtn{
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.detail #titlebox{
+    font-size: 30px;
+    font-weight: 600;
+    color:#031829;;
+}
+/* Style for the input field */
+#titlebox {
+  
+    border: none; /* Initially, hide the border */
+    outline: none; /* Remove the focus outline */
+    font-size: 18px; /* Adjust the font size as needed */
+    padding: 5px; /* Add some padding for spacing */
+    width: 100%; /* Expand the input to fill its container */
+    transition: border 0.3s; /* Add a smooth transition for the border */
+    background-color: transparent; /* Make the input background transparent */
+}
+
+.detail #imagebox{
+    width: 50%;
+    height: 60vh;
+}
+
+
+/* Style for the hidden file input */
+#imagefile {
+    display: none;
+}
+
+/* Style for the label (icon) that triggers the file input */
+#imagefile-label {
+    width: 50%;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    display: flex;
+   justify-content: end;
+}
+
+/* Style for the FontAwesome icon */
+#imagefile-label i {
+    font-size: 20px;
+    color: #555;
+}
+#upload{
+    visibility: hidden; 
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    border: 2px solid black;
+}
+
+

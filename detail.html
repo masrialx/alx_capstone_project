@@ -32,8 +32,43 @@
 
     </header>
  
-    <main>
-     
+    <main class="bodyy">
+        <div class="detail">
+            <div class="details">
+                <input type="text" name="title" id="titlebox" value="The Evolution of Mobile Technology: From Brick Phones to Smartphones">
+                <div class="imageboxx">
+                    <img src="./image/background (2).jpg" alt="image" id="imagebox">
+                    <!-- Hidden input:file -->
+                    <input type="file" name="image" id="imagefile" style="display: none;">
+                    <!-- Icon to trigger file input -->
+                    <label for="imagefile" id="imagefile-label">
+                        <img src="./image/image-upload-svgrepo-com.svg" alt="upload" id="upload">
+                        <i class="fas fa-image"></i> <!-- FontAwesome icon -->
+                    </label>
+                    <div class="category">
+                        <h4 id="options">MOBILE</h4>
+                        <select id="categorySelect" style="display: none;">
+                            <option value="MOBILE">MOBILE</option>
+                            <option value="DESIGN">DESIGN</option>
+                            <option value="COMPUTER">COMPUTER</option>
+                        </select>
+                    </div>                    
+
+                </div>
+
+                <div class="desc">
+                    <span class="time">12:07:2023</span>
+                    <div class="desc">
+                        <span class="time"></span>
+                        <textarea name="" id="description" cols="30" rows="10" disabled style="border: none;">
+                            Welcome to our comprehensive guide to the ever-evolving world of mobile technology...
+                        </textarea>
+                    </div>
+                </div>
+                <img src="./image/edit-3-svgrepo-com.svg" alt="edit" id="editbtn">
+            </div>
+        </div>
+        
 
     </main>
 
@@ -58,7 +93,7 @@
         </div>
     </footer>
     
-
+    <script src="./script/detail.js"></script>
     <script src="./script/home.js"></script>
 </body>
 </html>
