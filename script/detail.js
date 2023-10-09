@@ -1,83 +1,134 @@
-
 const titleInput = document.getElementById("titlebox");
 const editButton = document.getElementById("editbtn");
 const imageBox = document.getElementById('imagebox');
 const imageFile = document.getElementById('imagefile');
-const upload = document.getElementById('upload'); // Remove the '#' in the id selector
+const upload = document.getElementById('upload');
+const deleteButton = document.querySelector(".delete-button");
+const popup = document.getElementById("popup");
+const confirmYesButton = document.querySelector(".popup-confirm-yes");
+const confirmNoButton = document.querySelector(".popup-confirm-no");
+const description = document.getElementById('description');
+const categorySelect = document.getElementById('categorySelect');
+const options = document.getElementById('options');
+const editBtn = document.getElementById("editbtn");
+const saveBtn = document.getElementById("save");
+const deleteBtn = document.getElementById("delete");
+const closeBtn = document.getElementById("close");
 
 // Initially, hide the input border and the upload element
 titleInput.style.border = "none";
-upload.style.visibility = "hidden"; // Hide the 'upload' element
+upload.style.visibility = "hidden";
 
 // Add a click event listener to the "Edit" button
 editButton.addEventListener("click", function () {
+    titleInput.removeAttribute("disabled");
+    
     // Toggle the visibility of the 'upload' element
-    if (upload.style.visibility === "hidden") {
-        upload.style.visibility = "visible";
-    } else {
-        upload.style.visibility = "hidden";
-    }
+    upload.style.visibility = (upload.style.visibility === "hidden") ? "visible" : "hidden";
 
-    // Check if the input border is currently hidden
+    // Toggle the input border
     if (titleInput.style.border === "none") {
-        // Show the input border
         titleInput.style.border = "1px solid #ccc";
         titleInput.removeAttribute("readonly"); // Enable editing
     } else {
-        // Hide the input border
         titleInput.style.border = "none";
         titleInput.setAttribute("readonly", "true"); // Disable editing
     }
+
+    // Toggle the visibility of the category options
+    if (options.style.display === 'block') {
+        options.style.display = 'none';
+        categorySelect.style.display = 'block';
+    } else {
+        options.style.display = 'block';
+        categorySelect.style.display = 'none';
+    }
+    
+    // Toggle the description textarea
+    if (description.disabled) {
+        description.disabled = false;
+        description.style.border = '1px solid #ccc';
+    } else {
+        description.disabled = true;
+        description.style.border = 'none';
+    }
 });
 
+// Add a click event listener to the "Edit" button
+closeBtn.addEventListener("click", function () {
+    titleInput.removeAttribute("disabled");
+    
+    // Toggle the visibility of the 'upload' element
+    upload.style.visibility = (upload.style.visibility === "hidden") ? "visible" : "hidden";
 
+    // Toggle the input border
+    if (titleInput.style.border === "none") {
+        titleInput.style.border = "1px solid #ccc";
+        titleInput.removeAttribute("readonly"); // Enable editing
+    } else {
+        titleInput.style.border = "none";
+        titleInput.setAttribute("readonly", "true"); // Disable editing
+    }
 
-
+    // Toggle the visibility of the category options
+    if (options.style.display === 'block') {
+        options.style.display = 'none';
+        categorySelect.style.display = 'block';
+    } else {
+        options.style.display = 'block';
+        categorySelect.style.display = 'none';
+    }
+    
+    // Toggle the description textarea
+    if (description.disabled) {
+        description.disabled = false;
+        description.style.border = '1px solid #ccc';
+    } else {
+        description.disabled = true;
+        description.style.border = 'none';
+    }
+});
 
 // Add change event listener to the file input
 imageFile.addEventListener('change', () => {
     const file = imageFile.files[0]; // Get the selected file
     if (file) {
-        // Create a FileReader to read the selected image file
         const reader = new FileReader();
         reader.onload = function (e) {
-            // Set the image source to the selected file's data URL
             imageBox.src = e.target.result;
         };
         reader.readAsDataURL(file);
     }
 });
 
-
-const categorySelect = document.getElementById('categorySelect');
-const options = document.getElementById('options');
-
-// Initially, set the visibility of #options to visible and #categorySelect to hidden
-options.style.display = 'block';
-categorySelect.style.display = 'none';
-
-// Add a click event listener to the "Edit" button
-editButton.addEventListener('click', function () {
-    if (options.style.display === 'block') {
-        // Hide #options and show #categorySelect
-        options.style.display = 'none';
-        categorySelect.style.display = 'block';
-    } else {
-        // Show #options and hide #categorySelect
-        options.style.display = 'block';
-        categorySelect.style.display = 'none';
-    }
+// Show delete confirmation popup
+deleteButton.addEventListener("click", () => {
+    popup.style.visibility = "visible";
 });
 
-const description = document.getElementById('description');
-
-editButton.addEventListener('click', () => {
-    if (description.disabled) {
-        description.disabled = false;
-        description.style.border = '1px solid #ccc'; // Add a border when editing
-    } else {
-        description.disabled = true;
-        description.style.border = 'none'; // Remove the border when not editing
-    }
+// Confirm delete action
+confirmYesButton.addEventListener("click", () => {
+    // Handle the delete action here (e.g., delete the post)
+    console.log("Post deleted.");
+    popup.style.visibility = "hidden";
 });
 
+// Cancel delete action
+confirmNoButton.addEventListener("click", () => {
+    popup.style.visibility = "hidden";
+});
+
+// Toggle between edit and close buttons
+editBtn.addEventListener("click", function () {
+    editBtn.style.display = "none";
+    saveBtn.style.display = "inline-block";
+    deleteBtn.style.display = "none";
+    closeBtn.style.display = "inline-block";
+});
+
+closeBtn.addEventListener("click", function () {
+    saveBtn.style.display = "none";
+    editBtn.style.display = "inline-block";
+    closeBtn.style.display = "none";
+    deleteBtn.style.display = "inline-block";
+});

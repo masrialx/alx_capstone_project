@@ -10,17 +10,22 @@
 .detail{
     width: 100%;
     height: auto;
+    display: flex;
+    justify-content: center;
 }
 .details{
-    width: 90%;
+    width: 80%;
     height: auto;
+    display: flex;
+
 }
 
-.detail #editbtn{
+.detail #editbtn,#delete,#save ,#close{
     width: 40px;
     height: 40px;
     cursor: pointer;
 }
+#save ,#close{}
 
 .detail #titlebox{
     font-size: 30px;
@@ -29,22 +34,87 @@
 }
 /* Style for the input field */
 #titlebox {
-  
     border: none; /* Initially, hide the border */
     outline: none; /* Remove the focus outline */
-    font-size: 18px; /* Adjust the font size as needed */
+    font-size: 16px; /* Adjust the font size as needed */
     padding: 5px; /* Add some padding for spacing */
-    width: 100%; /* Expand the input to fill its container */
+    width: 90%; /* Expand the input to fill its container */
     transition: border 0.3s; /* Add a smooth transition for the border */
     background-color: transparent; /* Make the input background transparent */
+    
 }
+
+/* Basic CSS for styling the success message */
+.msg {
+    visibility: visible;
+    position: absolute;
+    /* background-color: #4CAF50; */
+    background-color: #0056b3;
+    color: white;
+    text-align: center;
+}
+
+.success-message {
+    visibility: visible;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    text-align: center;
+}
+
 
 .detail #imagebox{
-    width: 50%;
-    height: 60vh;
+    width: 90%;
+    height: 80vh;
+    object-fit: cover;
+    border-radius: 20px;
 }
+.right .most{
+    display: flex;
+    justify-content: center;
+    color: #007bff;
+    font-size: 30px;
+    font-weight: 600;
+}
+.right{
+    display: flex;
+    align-items: center;
+    width: 35%;
+   display: flex;
+   flex-direction: column;
+}
+.right .rights{
+    margin: 15px;
+    background-color: rgba(222, 219, 219, 0.2);
+    width: 70%;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 20px;
+    cursor: pointer;
+    transform: scale(1);
+    transition: 0.7s;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 
-
+}
+.right .rights:hover{
+    transform: scale(1.01);
+}
+.right img{
+    min-width: 90%;
+    height: 17rem;
+    border-radius: 20px;
+}
+.right .tite{
+    color: #031829;
+    position: relative;
+    font-size: 20px;
+    width: 90%;
+    font-weight: 600;
+    
+}
 /* Style for the hidden file input */
 #imagefile {
     display: none;
@@ -52,9 +122,10 @@
 
 /* Style for the label (icon) that triggers the file input */
 #imagefile-label {
-    width: 50%;
+    width: 75%;
     cursor: pointer;
-    padding: 5px;
+    position: relative;
+    bottom: 40px;
     border-radius: 5px;
     display: flex;
    justify-content: end;
@@ -66,11 +137,151 @@
     color: #555;
 }
 #upload{
-    visibility: hidden; 
+    visibility: hidden;
     width: 30px;
     height: 30px;
     background-color: transparent;
     border: 2px solid black;
 }
+
+.popup-container {
+    visibility: hidden;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.allbtns{
+    background-color: #0056b3;
+    width: 75%;
+}
+
+.popup {
+    left: 20%;
+    top: 30%;
+    position: absolute;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    width: 60%; /* Set the width to 50% */
+    text-align: center; /* Center text horizontally */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+}
+
+.msg{
+    visibility: visible;
+    position: relative;
+    border-radius: 10px;
+    width: 100%;
+    background-color: #0056b3;
+    display: flex;
+    justify-content: center;
+}
+.popup-message {
+    width: 50%;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+.msg p{
+   font-size: 20px;
+}
+.popup-confirm-yes,
+.popup-confirm-no {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.popup-confirm-yes:hover,
+.popup-confirm-no:hover {
+    background-color: #0056b3;
+}
+
+/* /////comments ////////// */
+
+.comment-container {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+}
+
+.comment-label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.comment-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    resize: vertical;
+}
+
+.comment-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.comment-button:hover {
+    background-color: #0056b3;
+}
+
+.comment-section {
+    margin-top: 20px;
+}
+
+.comment {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.comment-profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.comment-details {
+    flex: 1;
+}
+
+.comment-author {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.comment-text {
+    margin: 0;
+}
+
+
+@media screen and (max-width: 768px) {}
 
 
