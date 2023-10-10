@@ -13,21 +13,24 @@
     display: flex;
     justify-content: center;
 }
-.details{
-    width: 80%;
+.details{ 
+    width: 75%;
     height: auto;
+    justify-content: space-between;
     display: flex;
-
+   flex-wrap: nowrap;
 }
 
 .detail #editbtn,#delete,#save ,#close{
-    width: 40px;
-    height: 40px;
+    margin: 3px;
+    width: 30px;
+    height: 30px;
     cursor: pointer;
 }
-#save ,#close{}
+
 
 .detail #titlebox{
+    margin-top: 3%;
     font-size: 30px;
     font-weight: 600;
     color:#031829;;
@@ -48,8 +51,8 @@
 .msg {
     visibility: visible;
     position: absolute;
-    /* background-color: #4CAF50; */
-    background-color: #0056b3;
+    background-color: #4CAF50;
+    /* background-color: #0056b3; */
     color: white;
     text-align: center;
 }
@@ -62,13 +65,40 @@
     margin-top: 10px;
     text-align: center;
 }
-
+.msg{
+    
+    visibility: visible;
+    position: relative;
+    width: 100%;
+    background-color: #4CAF50;
+    display: flex;
+    justify-content: center;
+}
 
 .detail #imagebox{
-    width: 90%;
-    height: 80vh;
+    margin-top: 2%;
+    /* width: 40rem; */
+    height: 70vh;
+    max-width: 680px;
+    width: 100%;
     object-fit: cover;
     border-radius: 20px;
+}
+
+.details .desc textarea{
+    width: 40rem;
+    font-size: 17px;
+    border: 1px solid black;
+    height: 40vh;
+   
+}
+.detail .time{
+    font-family: Arial, sans-serif;
+    font-weight: 600;
+    
+}
+.detail #description{
+    display: none;
 }
 .right .most{
     display: flex;
@@ -78,16 +108,23 @@
     font-weight: 600;
 }
 .right{
+   
+    margin-top: 7%;
     display: flex;
     align-items: center;
     width: 35%;
-   display: flex;
-   flex-direction: column;
+    display: flex;
+    flex-direction: column;
+} 
+.right .lines{
+    height: 4px;
+    width: 100%;
+    background-color: #0056b3;
 }
 .right .rights{
     margin: 15px;
     background-color: rgba(222, 219, 219, 0.2);
-    width: 70%;
+    width: 90%;
     height: 350px;
     display: flex;
     flex-direction: column;
@@ -102,8 +139,12 @@
 .right .rights:hover{
     transform: scale(1.01);
 }
+.detail .descx{
+    text-align: justify;
+    width: 40rem;
+}
 .right img{
-    min-width: 90%;
+    width: 19rem;
     height: 17rem;
     border-radius: 20px;
 }
@@ -119,32 +160,48 @@
 #imagefile {
     display: none;
 }
-
+.allbtns{
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+    width: 38rem;
+    position: relative;
+    /* bottom: 50px; */
+   
+}
 /* Style for the label (icon) that triggers the file input */
 #imagefile-label {
-    width: 75%;
+    width: 10rem;
     cursor: pointer;
     position: relative;
-    bottom: 40px;
+    /* bottom: 40px; */
     border-radius: 5px;
     display: flex;
-   justify-content: end;
+    justify-content: end;
+   
 }
 
-/* Style for the FontAwesome icon */
-#imagefile-label i {
-    font-size: 20px;
-    color: #555;
+.comment .delete{
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
 }
+
+
+/* Style for the FontAwesome icon */
+
 #upload{
     visibility: hidden;
     width: 30px;
     height: 30px;
     background-color: transparent;
     border: 2px solid black;
+    background-color: wheat;
+  
 }
 
 .popup-container {
+    z-index: 9999;
     visibility: hidden;
     position: absolute;
     display: flex;
@@ -159,10 +216,15 @@
 }
 
 .allbtns{
-    background-color: #0056b3;
-    width: 75%;
+   
+    /* width: 75%; */
+    position: relative;
+    bottom:3%;
+    left: 20px;
 }
-
+.allbtns img{
+    background-color: aliceblue;
+}
 .popup {
     left: 20%;
     top: 30%;
@@ -179,15 +241,7 @@
     justify-content: center; /* Center content horizontally */
 }
 
-.msg{
-    visibility: visible;
-    position: relative;
-    border-radius: 10px;
-    width: 100%;
-    background-color: #0056b3;
-    display: flex;
-    justify-content: center;
-}
+
 .popup-message {
     width: 50%;
     font-size: 18px;
@@ -219,8 +273,9 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 20px;
+    margin-top: 2%;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
+    max-width: 660px;
     width: 100%;
 }
 
@@ -231,6 +286,7 @@
 }
 
 .comment-textarea {
+    font-size: 17px;
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -253,11 +309,16 @@
 
 .comment-section {
     margin-top: 20px;
+   
+
 }
 
 .comment {
+    align-items: center;
     display: flex;
     margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);   
+    width: 41rem;
 }
 
 .comment-profile-pic {
@@ -282,6 +343,223 @@
 }
 
 
-@media screen and (max-width: 768px) {}
+@media screen and (max-width: 1240px) {
+    .details{ 
+        width: 90%;
+    
+    }
+
+}
+
+@media screen and (max-width: 1080px) {
+    .details{ 
+        width: 95%;
+    
+    }
+
+}
+@media screen and (max-width: 1008px) {
+    .details{ 
+        width: 80%;
+        flex-wrap: wrap;
+    }
+    .right{
+        margin-top: 7%;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        justify-content: center;
+    }
+    .rightt{
+        width: 80%;
+        justify-content: center;
+        display: flex;
+        scroll-behavior: smooth;
+        /* overflow-y: scroll; */
+    }
+
+}
+
+@media screen and (max-width: 995px) {
+    .details{ 
+        width: 80%;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .right{
+        margin-top: 7%;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        justify-content: center;
+    }
+    .rightt{
+        width: 80%;
+        justify-content: center;
+        display: flex;
+        scroll-behavior: smooth;
+        /* overflow-y: scroll; */
+    }
+    .right .rightt{
+        margin: 15px;
+        background-color: rgba(222, 219, 219, 0.2);
+        width: 70%;
+        height: auto;
+        flex-wrap: nowrap;
+    }
+  
+    .detail .descx{
+        text-align: justify;
+        width: 42rem;
+    }
+    .right img{
+        width: 15rem;
+        height: 15rem;
+        border-radius: 20px;
+    }
+    .right .tite{
+        color: #031829;
+        position: relative;
+        font-size: 20px;
+        width: 90%;
+        font-weight: 600;
+        
+    }
+}
 
 
+@media screen and (max-width: 800px) {
+    .right{
+        margin-top: 7%;
+        width: 100%;
+        justify-content: center;
+    }
+    .rightt{
+        width: 90%;
+    }
+    .rightt .rights{
+        width: 90%;
+        height: auto;
+        margin: 2%;
+    }
+    .right .rightt{
+        margin: 15px;
+        background-color: rgba(222, 219, 219, 0.2);
+        width: 90%;
+        height: auto;
+        flex-wrap: wrap;
+        
+    }
+    .right img{
+        width: 100%;
+        height: 20rem;
+        border-radius: 20px;
+    }
+    .right .tite{
+        color: #031829;
+        position: relative;
+        font-size: 20px;
+        width: 90%;
+        font-weight: 600;
+        
+    }
+   
+}
+
+@media screen and (max-width: 780px) {
+  
+.detail {
+   width: 100%;
+}
+.detail {
+    width: 100%;
+}
+.detail #imagebox{
+    margin-top: 2%;
+    height: 60vh;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.details .desc textarea{
+    width: 90%;
+    font-size: 17px;
+    border: 1px solid black;
+    height: 40vh;
+   
+}
+.details .desc .descx{
+    width: 100%;
+    font-size: 17px;
+
+   
+}
+.comment {
+     width: 90%;
+}
+
+.detail #imageboxx{
+   width: 100%;
+}
+
+.comment-container {
+    width: 90%;
+}
+.allbtns{
+    width: 90%;
+   
+}
+}
+
+@media screen and (max-width: 700px) {
+  
+    .detail {
+       width: 100%;
+    }
+    .detail {
+        width: 100%;
+    }
+    .detail #imagebox{
+        margin-top: 2%;
+        height: 60vh;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 20px;
+    }
+    
+    .details .desc textarea{
+        width: 100%;
+        font-size: 17px;
+        border: 1px solid black;
+        height: 40vh;
+       
+    }
+    .details .desc .descx{
+        width: 100%;
+        font-size: 17px;
+    
+       
+    }
+    .comment {
+         width: 100%;
+    }
+    
+    .detail #imageboxx{
+       width: 100%;
+    }
+    
+    .comment-container {
+        width: 100%;
+    }
+    .allbtns{
+        width: 100%;
+    }
+
+    #upload{
+        position: relative;
+        right: 40px;
+      
+      
+    }
+    }

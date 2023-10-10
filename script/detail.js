@@ -14,15 +14,19 @@ const editBtn = document.getElementById("editbtn");
 const saveBtn = document.getElementById("save");
 const deleteBtn = document.getElementById("delete");
 const closeBtn = document.getElementById("close");
+const descx = document.getElementById("descx");
 
-// Initially, hide the input border and the upload element
 titleInput.style.border = "none";
 upload.style.visibility = "hidden";
 
+// Initially hide the description element and titleInput
+description.style.display = "none";
+titleInput.disabled = true;
+
 // Add a click event listener to the "Edit" button
 editButton.addEventListener("click", function () {
-    titleInput.removeAttribute("disabled");
-    
+    titleInput.disabled = !titleInput.disabled;
+
     // Toggle the visibility of the 'upload' element
     upload.style.visibility = (upload.style.visibility === "hidden") ? "visible" : "hidden";
 
@@ -35,29 +39,23 @@ editButton.addEventListener("click", function () {
         titleInput.setAttribute("readonly", "true"); // Disable editing
     }
 
-    // Toggle the visibility of the category options
-    if (options.style.display === 'block') {
-        options.style.display = 'none';
-        categorySelect.style.display = 'block';
-    } else {
-        options.style.display = 'block';
-        categorySelect.style.display = 'none';
-    }
-    
-    // Toggle the description textarea
-    if (description.disabled) {
-        description.disabled = false;
-        description.style.border = '1px solid #ccc';
-    } else {
-        description.disabled = true;
-        description.style.border = 'none';
-    }
+    // Toggle the visibility of the category options and categorySelect
+    options.style.display = (options.style.display === 'block') ? 'none' : 'block';
+    categorySelect.style.display = (categorySelect.style.display === 'block') ? 'none' : 'block';
+
+    // Toggle the description textarea visibility
+    description.style.display = (description.style.display === 'none') ? 'block' : 'none';
+
+    // Toggle the visibility of descx
+    descx.style.display = (descx.style.display === "none") ? "block" : "none";
 });
+
+
 
 // Add a click event listener to the "Edit" button
 closeBtn.addEventListener("click", function () {
-    titleInput.removeAttribute("disabled");
-    
+    titleInput.disabled = !titleInput.disabled;
+
     // Toggle the visibility of the 'upload' element
     upload.style.visibility = (upload.style.visibility === "hidden") ? "visible" : "hidden";
 
@@ -70,24 +68,17 @@ closeBtn.addEventListener("click", function () {
         titleInput.setAttribute("readonly", "true"); // Disable editing
     }
 
-    // Toggle the visibility of the category options
-    if (options.style.display === 'block') {
-        options.style.display = 'none';
-        categorySelect.style.display = 'block';
-    } else {
-        options.style.display = 'block';
-        categorySelect.style.display = 'none';
-    }
-    
-    // Toggle the description textarea
-    if (description.disabled) {
-        description.disabled = false;
-        description.style.border = '1px solid #ccc';
-    } else {
-        description.disabled = true;
-        description.style.border = 'none';
-    }
+    // Toggle the visibility of the category options and categorySelect
+    options.style.display = (options.style.display === 'block') ? 'none' : 'block';
+    categorySelect.style.display = (categorySelect.style.display === 'block') ? 'none' : 'block';
+
+    // Toggle the description textarea visibility
+    description.style.display = (description.style.display === 'none') ? 'block' : 'none';
+
+    // Toggle the visibility of descx
+    descx.style.display = (descx.style.display === "none") ? "block" : "none";
 });
+
 
 // Add change event listener to the file input
 imageFile.addEventListener('change', () => {
@@ -132,3 +123,5 @@ closeBtn.addEventListener("click", function () {
     closeBtn.style.display = "none";
     deleteBtn.style.display = "inline-block";
 });
+
+

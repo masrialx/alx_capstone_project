@@ -46,11 +46,22 @@
                     
                     <img src="./image/background (2).jpg" alt="image" id="imagebox">
                     <!-- Hidden input:file -->
-                    <input type="file" name="image" id="imagefile" style="display: none;">
-                    <!-- Icon to trigger file input -->
-                    <label for="imagefile" id="imagefile-label">
-                        <img src="./image/image-upload-svgrepo-com.svg" alt="upload" id="upload">
-                    </label>
+                    <div class="allbtns">
+                       <div>
+                        <img src="./image/edit-3-svgrepo-com.svg" alt="edit" id="editbtn" class="edit-button">
+                        <img src="./image/delete-svgrepo-com.svg" alt="edit" id="delete" class="delete-button" >
+                        <img src="./image/save-svgrepo-com.svg" alt="edit" id="save" class="edit-button" style="display: none;">
+                        <img src="./image/close-bold-svgrepo-com.svg" alt="edit" id="close" id="editbtn" class="delete-button" style="display: none;"> 
+                        <input type="file" name="image" id="imagefile" style="display: none;">
+                       
+                       </div>
+                        <!-- Icon to trigger file input -->
+                        <label for="imagefile" id="imagefile-label">
+                            <img src="./image/image-upload-svgrepo-com.svg" alt="upload" id="upload">
+                        </label>
+                    </div>
+
+                 
                     <div class="category">
                         <h4 id="options">MOBILE</h4>
                         <select id="categorySelect" style="display: none;">
@@ -61,13 +72,43 @@
                     </div>   
                     
                     <div class="desc">
-                        <span class="time">12:07:2023</span>
+                        
                         <div class="desc">
-                            <span class="time"></span>
-                            <textarea name="" id="description" cols="30" rows="10" disabled style="border: none;">
-                                Welcome to our comprehensive guide to the ever-evolving world of mobile technology...
+                            <span class="time">12:07:2023</span>
+                            <textarea name="description" id="description" cols="30" rows="10"  style="border: none;">
+                             Mobile technology has revolutionized the way we live, work, and connect with the world. In today's fast-paced digital age, mobile devices have become an integral part of our daily lives, serving as our communication hub, entertainment center, and productivity tool, all in the palm of our hands.
+
+The evolution of mobile technology has been nothing short of remarkable. From the early days of brick-sized cell phones to the sleek and powerful smartphones of today, we've witnessed a rapid progression in both hardware and software. With each passing year, mobile devices become more sophisticated, offering cutting-edge features, high-speed connectivity, and stunning displays.
+
+One of the most significant milestones in mobile technology is the advent of 5G networks. This next-generation wireless technology has unleashed lightning-fast internet speeds, enabling seamless streaming, lag-free gaming, and real-time communication. As 5G continues to roll out globally, it promises to unlock new possibilities in fields like augmented reality, virtual reality, and IoT (Internet of Things).
+
+Another game-changing innovation is the rise of foldable smartphones. These foldable devices combine the portability of a smartphone with the functionality of a tablet, providing users with flexible and versatile screens. They represent a shift in how we think about form factors and could reshape the future of mobile computing.
+
+Mobile app development has also flourished, with millions of apps available for download across various platforms. From social media apps to productivity tools, there's an app for almost everything, making our smartphones indispensable tools for both work and leisure.
+
+In addition to consumer applications, mobile technology is making a significant impact on various industries. Healthcare professionals use mobile devices to monitor patients' health remotely, educators incorporate mobile apps into the classroom, and businesses leverage mobile solutions to streamline operations and reach a global audience.
+
+The future of mobile technology holds even more promise. With ongoing advancements in artificial intelligence, mobile devices will become smarter and more intuitive, anticipating our needs and providing personalized experiences. Augmented reality (AR) and virtual reality (VR) will blur the lines between the digital and physical worlds, offering immersive experiences and new avenues for creativity.
+
+As we navigate the ever-evolving landscape of mobile technology, staying informed about the latest trends and innovations is essential. Mobile technology is not just a tool; it's a driving force behind societal and technological progress. It's a dynamic journey into the future, where possibilities are limitless, and the next breakthrough is always on the horizon.
                             </textarea>
-                              
+                        <p class="descx" id="descx">
+                                Mobile technology has revolutionized the way we live, work, and connect with the world. In today's fast-paced digital age, mobile devices have become an integral part of our daily lives, serving as our communication hub, entertainment center, and productivity tool, all in the palm of our hands.
+   
+   The evolution of mobile technology has been nothing short of remarkable. From the early days of brick-sized cell phones to the sleek and powerful smartphones of today, we've witnessed a rapid progression in both hardware and software. With each passing year, mobile devices become more sophisticated, offering cutting-edge features, high-speed connectivity, and stunning displays.
+   
+   One of the most significant milestones in mobile technology is the advent of 5G networks. This next-generation wireless technology has unleashed lightning-fast internet speeds, enabling seamless streaming, lag-free gaming, and real-time communication. As 5G continues to roll out globally, it promises to unlock new possibilities in fields like augmented reality, virtual reality, and IoT (Internet of Things).
+   
+   Another game-changing innovation is the rise of foldable smartphones. These foldable devices combine the portability of a smartphone with the functionality of a tablet, providing users with flexible and versatile screens. They represent a shift in how we think about form factors and could reshape the future of mobile computing.
+   
+   Mobile app development has also flourished, with millions of apps available for download across various platforms. From social media apps to productivity tools, there's an app for almost everything, making our smartphones indispensable tools for both work and leisure.
+   
+   In addition to consumer applications, mobile technology is making a significant impact on various industries. Healthcare professionals use mobile devices to monitor patients' health remotely, educators incorporate mobile apps into the classroom, and businesses leverage mobile solutions to streamline operations and reach a global audience.
+   
+   The future of mobile technology holds even more promise. With ongoing advancements in artificial intelligence, mobile devices will become smarter and more intuitive, anticipating our needs and providing personalized experiences. Augmented reality (AR) and virtual reality (VR) will blur the lines between the digital and physical worlds, offering immersive experiences and new avenues for creativity.
+   
+   As we navigate the ever-evolving landscape of mobile technology, staying informed about the latest trends and innovations is essential. Mobile technology is not just a tool; it's a driving force behind societal and technological progress. It's a dynamic journey into the future, where possibilities are limitless, and the next breakthrough is always on the horizon.
+                        </p>      
                         
                         
                     </div>
@@ -83,15 +124,7 @@
                         </div>
                     </div>
     
-                    <div class="allbtns">
-    
-                        <img src="./image/edit-3-svgrepo-com.svg" alt="edit" id="editbtn" class="edit-button">
-                        <img src="./image/delete-svgrepo-com.svg" alt="edit" id="delete" class="delete-button" >
-                        <img src="./image/save-svgrepo-com.svg" alt="edit" id="save" class="edit-button" style="display: none;">
-                       
-                        <img src="./image/close-bold-svgrepo-com.svg" alt="edit" id="close" id="editbtn" class="delete-button" style="display: none;">
-                        
-                    </div>
+      
                 </div>
                     
                     <div class="boxx">
@@ -108,13 +141,8 @@
                                     <p class="comment-author">John Doe</p>
                                     <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
                                 </div>
-                            </div>
-                            <div class="comment">
-                                <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
-                                <div class="comment-details">
-                                    <p class="comment-author">Jane Smith</p>
-                                    <p class="comment-text">I found this article very informative. Keep up the good work!</p>
-                                </div>
+                                <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
+
                             </div>
                             <div class="comment">
                                 <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
@@ -122,13 +150,8 @@
                                     <p class="comment-author">John Doe</p>
                                     <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
                                 </div>
-                            </div>
-                            <div class="comment">
-                                <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
-                                <div class="comment-details">
-                                    <p class="comment-author">Jane Smith</p>
-                                    <p class="comment-text">I found this article very informative. Keep up the good work!</p>
-                                </div>
+                                <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
+
                             </div>
                             <div class="comment">
                                 <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
@@ -136,13 +159,35 @@
                                     <p class="comment-author">John Doe</p>
                                     <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
                                 </div>
+                                <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
+
                             </div>
                             <div class="comment">
                                 <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
                                 <div class="comment-details">
-                                    <p class="comment-author">Jane Smith</p>
-                                    <p class="comment-text">I found this article very informative. Keep up the good work!</p>
+                                    <p class="comment-author">John Doe</p>
+                                    <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
                                 </div>
+                                <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
+
+                            </div>
+                            <div class="comment">
+                                <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
+                                <div class="comment-details">
+                                    <p class="comment-author">John Doe</p>
+                                    <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
+                                </div>
+                                <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
+
+                            </div>
+                            <div class="comment">
+                                <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
+                                <div class="comment-details">
+                                    <p class="comment-author">John Doe</p>
+                                    <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
+                                </div>
+                                <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
+
                             </div>
                      </div>
                     </div>
@@ -151,26 +196,33 @@
             
        
             <div class="right">
-                <span class="most">RELATED POST</span>
-
-                <div class="rights">
-                    <img src="./image/background (2).jpg" alt="image">
-                    <span class="tite">
-                        To change the background color of the success message to a popular
-                    </span>
+                <div class="rel">
+                    <span class="most">RELATED POST</span>
+                    <div class="lines"></div>
                 </div>
-                <div class="rights">
-                    <img src="./image/background (2).jpg" alt="image">
-                    <span class="tite">
-                        To change the background color of the success message to a popular
-                    </span>
+                <div class="rightt">
+                    <div class="rights">
+                      
+                        <img src="./image/background (2).jpg" alt="image">
+                        <span class="tite">
+                            To change the background color of the success message to a popular
+                        </span>
+                    </div>
+                    <div class="rights">
+                        <img src="./image/background (2).jpg" alt="image">
+                        <span class="tite">
+                            To change the background color of the success message to a popular
+                        </span>
+                    </div>
+                    <div class="rights">
+                        <img src="./image/background (2).jpg" alt="image">
+                        <span class="tite">
+                            To change the background color of the success message to a popular
+                        </span>
+                    </div>
                 </div>
-                <div class="rights">
-                    <img src="./image/background (2).jpg" alt="image">
-                    <span class="tite">
-                        To change the background color of the success message to a popular
-                    </span>
-                </div>
+           
+         
             </div>
         </div>
         
