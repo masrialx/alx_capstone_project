@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from imgurpython import ImgurClient 
 import os
 from werkzeug.utils import secure_filename
+from flask_jwt_extended import JWTManager,create_access_token,jwt_required,get_jwt_identity
 
 app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///market.db'
@@ -24,11 +25,12 @@ app.config['MAIL_PASSWORD'] = 'edfk ycdz zyeh ewxt'
 app.config['MAIL_DEFAULT_SENDER'] = 'Masri'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}  # Allowed image file extensions
-
+app.config['JWT_SECRET_KEY'] = '72d630c0cef6c01bff062d80'  # Replace with a strong secret key
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)  # Set token expiration time
+jwt = JWTManager(app)
 db=SQLAlchemy(app)
 bcrypt = Bcrypt(app) 
 mail = Mail(app)
-
 
 
 class User(db.Model):
@@ -85,6 +87,7 @@ imgur_client = ImgurClient(IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET)
 # //////////create_post/////////////////
 
 @app.route('/post', methods=['POST'])
+@jwt_required()
 def create_post():
     data = request.form
 
@@ -128,9 +131,9 @@ def create_post():
 
     return jsonify({'message': 'Post created successfully'}), 201
 
+# Helper functions
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
-
 
 def upload_image_to_imgur(image_file):
     try:
@@ -143,6 +146,7 @@ def upload_image_to_imgur(image_file):
 
 
 @app.route('/post/edit/<int:post_id>', methods=['PUT'])
+@jwt_required()
 def edit_post(post_id):
     # Check if the post exists
     post = Post.query.get(post_id)
@@ -191,6 +195,7 @@ def edit_post(post_id):
 
 
 @app.route('/post/delete/<int:post_id>', methods=['DELETE'])
+@jwt_required()
 def delete_post(post_id):
     # Check if the post exists
     post = Post.query.get(post_id)
@@ -304,21 +309,59 @@ def get_all_users():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# @app.route('/login', methods=['POST'])
+# def login():
+#     data = request.get_json()
+#     email = data.get('email')
+#     password = data.get('password')
+
+#     # Check if the provided email and password match any user in the database
+#     user = User.query.filter_by(email=email).first()
+
+#     if user and bcrypt.check_password_hash(user.password, password):
+#         # Password is correct, proceed with authentication
+#         # You can generate a JWT token or set a session here
+#         return jsonify({'message': 'Login successful'})
+#     else:
+#         return jsonify({'message': 'Invalid email or password'}), 401
+
+
+# @app.route('/login', methods=['POST'])
+# def login():
+#     data = request.get_json()
+#     email = data.get('email')
+#     password = data.get('password')
+
+#     # Check if the provided email and password match any user in the database
+#     user = User.query.filter_by(email=email).first()
+
+#     if user and bcrypt.check_password_hash(user.password, password):
+#         # Password is correct - you can proceed with further actions here.
+#         # If you don't want to generate an access token, simply remove the line.
+        
+#         # Return a response or perform other actions as needed
+#         return jsonify({'message': 'Login successful'})
+#     else:
+#         return jsonify({'message': 'Invalid email or password'}), 401
+
+from flask_jwt_extended import create_access_token
+
+
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
 
-    # Check if the provided email and password match any user in the database
     user = User.query.filter_by(email=email).first()
 
     if user and bcrypt.check_password_hash(user.password, password):
-        # Password is correct, proceed with authentication
-        # You can generate a JWT token or set a session here
-        return jsonify({'message': 'Login successful'})
+        access_token = create_access_token(identity=user.id)  # Create a JWT token
+        return jsonify({'access_token': access_token}), 200
     else:
         return jsonify({'message': 'Invalid email or password'}), 401
+
+
 
 @app.route('/register', methods=['POST'])
 def register_user():
@@ -467,9 +510,10 @@ def reset_password():
 
 # //////////comment////////////////
 
-from datetime import datetime
+
 
 @app.route('/comment', methods=['POST'])
+@jwt_required()
 def create_comment():
     data = request.get_json()
 
@@ -503,6 +547,7 @@ def create_comment():
 
 
 @app.route('/post/<int:post_id>/comments', methods=['GET'])
+@jwt_required()
 def get_comments_for_post(post_id):
     # Check if the post exists
     post = Post.query.get(post_id)
@@ -527,6 +572,7 @@ def get_comments_for_post(post_id):
     return jsonify({'comments': comments_data})
 
 @app.route('/comment/<int:comment_id>', methods=['DELETE'])
+@jwt_required()
 def delete_comment(comment_id):
     data = request.get_json()
 
@@ -546,6 +592,20 @@ def delete_comment(comment_id):
 
 
 # //////////////endcomment///////////
+
+@app.route('/protected', methods=['GET'])
+@jwt_required()
+def protected_route():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    
+    # Your protected route logic here
+    # For example, you can return user-specific data or perform actions specific to the user.
+    # You can also access the 'user' object to work with the authenticated user's data.
+
+    return jsonify({'message': 'Welcome, ' + user.username})  # Example response
+
+
 
 if __name__ == '__main__':
     db.create_all()
