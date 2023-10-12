@@ -309,43 +309,6 @@ def get_all_users():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# @app.route('/login', methods=['POST'])
-# def login():
-#     data = request.get_json()
-#     email = data.get('email')
-#     password = data.get('password')
-
-#     # Check if the provided email and password match any user in the database
-#     user = User.query.filter_by(email=email).first()
-
-#     if user and bcrypt.check_password_hash(user.password, password):
-#         # Password is correct, proceed with authentication
-#         # You can generate a JWT token or set a session here
-#         return jsonify({'message': 'Login successful'})
-#     else:
-#         return jsonify({'message': 'Invalid email or password'}), 401
-
-
-# @app.route('/login', methods=['POST'])
-# def login():
-#     data = request.get_json()
-#     email = data.get('email')
-#     password = data.get('password')
-
-#     # Check if the provided email and password match any user in the database
-#     user = User.query.filter_by(email=email).first()
-
-#     if user and bcrypt.check_password_hash(user.password, password):
-#         # Password is correct - you can proceed with further actions here.
-#         # If you don't want to generate an access token, simply remove the line.
-        
-#         # Return a response or perform other actions as needed
-#         return jsonify({'message': 'Login successful'})
-#     else:
-#         return jsonify({'message': 'Invalid email or password'}), 401
-
-from flask_jwt_extended import create_access_token
-
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -363,25 +326,64 @@ def login():
 
 
 
+# @app.route('/register', methods=['POST'])
+# def register_user():
+#     data = request.get_json()
+    
+#     # Check if the username or email already exists
+#     existing_user = User.query.filter_by(username=data['username']).first() or User.query.filter_by(email=data['email']).first()
+    
+#     if existing_user:
+#         return jsonify({'message': 'Username or email already exists'}), 400
+
+#     # Create a new user
+#     new_user = User(
+#         # public_id=new_public_id,
+#         username=data['username'],
+#         email=data['email'],
+#         name=data['name'],
+#         profilepic=data.get('profilepic')  # Set profilepic if provided, otherwise it will be None
+#     )
+    
+#     # Hash the password using bcrypt
+#     hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+#     new_user.password = hashed_password
+
+#     db.session.add(new_user)
+#     db.session.commit()
+
+#     return jsonify({'message': 'User registered successfully'}), 201
+
+
+import requests
+
+# Define a function to generate avatars based on user data
+def generate_avatar(username):
+    # Customize the avatar using the user's username or other unique data
+    avatar_url = f"https://ui-avatars.com/api/?name={username}&background=random"
+    return avatar_url
+
 @app.route('/register', methods=['POST'])
 def register_user():
     data = request.get_json()
-    
+
     # Check if the username or email already exists
     existing_user = User.query.filter_by(username=data['username']).first() or User.query.filter_by(email=data['email']).first()
-    
+
     if existing_user:
         return jsonify({'message': 'Username or email already exists'}), 400
 
+    # Generate a unique avatar for the user based on their username
+    profilepic_url = generate_avatar(data['username'])
+
     # Create a new user
     new_user = User(
-        # public_id=new_public_id,
         username=data['username'],
         email=data['email'],
         name=data['name'],
-        profilepic=data.get('profilepic')  # Set profilepic if provided, otherwise it will be None
+        profilepic=profilepic_url  # Set the profile picture URL
     )
-    
+
     # Hash the password using bcrypt
     hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
     new_user.password = hashed_password
@@ -390,6 +392,7 @@ def register_user():
     db.session.commit()
 
     return jsonify({'message': 'User registered successfully'}), 201
+
 
 # //////////endregister///////////////
 
