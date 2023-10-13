@@ -7,6 +7,7 @@ const loginLink = document.getElementById("login");
 const categoryButtons = document.querySelectorAll('.category-button');
 const descElement = document.getElementById('limitedText');
 
+
 // Function to toggle the visibility of the list based on window width
 function toggleVisibility() {
     if (window.innerWidth > 800) {
@@ -100,7 +101,12 @@ window.addEventListener('scroll', () => {
 });
 
 
-  
+
+
+
+
+
+
 //   const text = descElement.textContent;
 
 //   // Split the text into words

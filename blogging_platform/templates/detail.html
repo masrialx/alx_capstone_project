@@ -1,82 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="style/header.css">
-    <link rel="stylesheet" href="style/detail.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail</title>
-</head>
-<body>
-    <header>
-     <div class="header">
-        <div class="headers" id="headersx">
-            <div class="logo">
-                <img src="./image/Logo (2).svg" alt="logo">
-            </div>
-            <div class="list" id="list">
-                <ul id="act">
+{% extends 'base.html' %}
+  {% block header %}
+  
+  <header>
+    <div class="header">
+       <div class="headers" id="headersx">
+           <div class="logo">
+               <img src="./image/Logo (2).svg" alt="logo">
+           </div>
+           <div class="list" id="list">
+               <ul id="act">
+                   <a href="{{ url_for('home') }}"><li  class="active">Home</li></a>
+                   <a href="{{ url_for('post') }}"><li>Post</li></a>
+                   <a href="{{ url_for('contact') }}"><li>Contact</li></a>
+                   {% if current_user.is_authenticated %}
+                   <a href="{{ url_for('logout') }}" class="login" id="login">Logout</a>
+               {% else %}
+                   <a href="{{ url_for('login') }}" class="login" id="login">Login</a>
+               {% endif %}                  
+              </ul>
+               <div class="listbtn">
+                <img src="{{ url_for('static', filename='image/list-ul-alt-svgrepo-com.svg') }}" alt="btn" id="imglist ">
+               </div>
+           </div>
+       </div>
+    </div>
 
-                    <a href="./home.html"><li class="active">Home</li></a>
-                    <a href="./post.html"><li>Post</li></a>
-                    <a href="./contact.html"><li>Contact</li></a>
-                    <a href="./login.html" class="login" id="login">Login</a>
-                  
-                </ul>
-                <div class="listbtn">
-                        <img src="./image/list-ul-alt-svgrepo-com.svg" alt="btn" id="imglist">
-                </div>
-            </div>
-        </div>
-     </div>
+   </header>
 
-    </header>
+  {% endblock %}
  
-    <main class="bodyy">
-        <div class="detail">
-            <div class="details">
-                
-                <div class="imageboxx">
-                    <div class="msg">
-                        <div class="success-message" id="successMessage">
-                            <p>Save successful!</p>
-                        </div>
-                    </div>
-                    <input type="text" name="title" id="titlebox" disabled="true" value="The Evolution of Mobile Technology">
-                    
-                    <img src="./image/background (2).jpg" alt="image" id="imagebox">
-                    <!-- Hidden input:file -->
-                    <div class="allbtns">
-                       <div>
-                        <img src="./image/edit-3-svgrepo-com.svg" alt="edit" id="editbtn" class="edit-button">
-                        <img src="./image/delete-svgrepo-com.svg" alt="edit" id="delete" class="delete-button" >
-                        <img src="./image/save-svgrepo-com.svg" alt="edit" id="save" class="edit-button" style="display: none;">
-                        <img src="./image/close-bold-svgrepo-com.svg" alt="edit" id="close" id="editbtn" class="delete-button" style="display: none;"> 
-                        <input type="file" name="image" id="imagefile" style="display: none;">
-                       
-                       </div>
-                        <!-- Icon to trigger file input -->
-                        <label for="imagefile" id="imagefile-label">
-                            <img src="./image/image-upload-svgrepo-com.svg" alt="upload" id="upload">
-                        </label>
-                    </div>
+  {% block main %}
 
-                 
-                    <div class="category">
-                        <h4 id="options">MOBILE</h4>
-                        <select id="categorySelect" style="display: none;">
-                            <option value="MOBILE">MOBILE</option>
-                            <option value="DESIGN">DESIGN</option>
-                            <option value="COMPUTER">COMPUTER</option>
-                        </select>
-                    </div>   
+  <main class="bodyy">
+    <div class="detail">
+        <div class="details">
+            
+            <div class="imageboxx">
+                <div class="msg">
+                    <div class="success-message" id="successMessage">
+                        <p>Save successful!</p>
+                    </div>
+                </div>
+                <input type="text" name="title" id="titlebox" disabled="true" value="The Evolution of Mobile Technology">
+                
+                <img src="./image/background (2).jpg" alt="image" id="imagebox">
+                <!-- Hidden input:file -->
+                <div class="allbtns">
+                   <div>
+                    <img src="./image/edit-3-svgrepo-com.svg" alt="edit" id="editbtn" class="edit-button">
+                    <img src="./image/delete-svgrepo-com.svg" alt="edit" id="delete" class="delete-button" >
+                    <img src="./image/save-svgrepo-com.svg" alt="edit" id="save" class="edit-button" style="display: none;">
+                    <img src="./image/close-bold-svgrepo-com.svg" alt="edit" id="close" id="editbtn" class="delete-button" style="display: none;"> 
+                    <input type="file" name="image" id="imagefile" style="display: none;">
+                   
+                   </div>
+                    <!-- Icon to trigger file input -->
+                    <label for="imagefile" id="imagefile-label">
+                        <img src="./image/image-upload-svgrepo-com.svg" alt="upload" id="upload">
+                    </label>
+                </div>
+
+             
+                <div class="category">
+                    <h4 id="options">MOBILE</h4>
+                    <select id="categorySelect" style="display: none;">
+                        <option value="MOBILE">MOBILE</option>
+                        <option value="DESIGN">DESIGN</option>
+                        <option value="COMPUTER">COMPUTER</option>
+                    </select>
+                </div>   
+                
+                <div class="desc">
                     
                     <div class="desc">
-                        
-                        <div class="desc">
-                            <span class="time">12:07:2023</span>
-                            <textarea name="description" id="description" cols="30" rows="10"  style="border: none;">
-                             Mobile technology has revolutionized the way we live, work, and connect with the world. In today's fast-paced digital age, mobile devices have become an integral part of our daily lives, serving as our communication hub, entertainment center, and productivity tool, all in the palm of our hands.
+                        <span class="time">12:07:2023</span>
+                        <textarea name="description" id="description" cols="30" rows="10"  style="border: none;">
+                         Mobile technology has revolutionized the way we live, work, and connect with the world. In today's fast-paced digital age, mobile devices have become an integral part of our daily lives, serving as our communication hub, entertainment center, and productivity tool, all in the palm of our hands.
 
 The evolution of mobile technology has been nothing short of remarkable. From the early days of brick-sized cell phones to the sleek and powerful smartphones of today, we've witnessed a rapid progression in both hardware and software. With each passing year, mobile devices become more sophisticated, offering cutting-edge features, high-speed connectivity, and stunning displays.
 
@@ -91,166 +90,143 @@ In addition to consumer applications, mobile technology is making a significant 
 The future of mobile technology holds even more promise. With ongoing advancements in artificial intelligence, mobile devices will become smarter and more intuitive, anticipating our needs and providing personalized experiences. Augmented reality (AR) and virtual reality (VR) will blur the lines between the digital and physical worlds, offering immersive experiences and new avenues for creativity.
 
 As we navigate the ever-evolving landscape of mobile technology, staying informed about the latest trends and innovations is essential. Mobile technology is not just a tool; it's a driving force behind societal and technological progress. It's a dynamic journey into the future, where possibilities are limitless, and the next breakthrough is always on the horizon.
-                            </textarea>
-                        <p class="descx" id="descx">
-                                Mobile technology has revolutionized the way we live, work, and connect with the world. In today's fast-paced digital age, mobile devices have become an integral part of our daily lives, serving as our communication hub, entertainment center, and productivity tool, all in the palm of our hands.
-   
-   The evolution of mobile technology has been nothing short of remarkable. From the early days of brick-sized cell phones to the sleek and powerful smartphones of today, we've witnessed a rapid progression in both hardware and software. With each passing year, mobile devices become more sophisticated, offering cutting-edge features, high-speed connectivity, and stunning displays.
-   
-   One of the most significant milestones in mobile technology is the advent of 5G networks. This next-generation wireless technology has unleashed lightning-fast internet speeds, enabling seamless streaming, lag-free gaming, and real-time communication. As 5G continues to roll out globally, it promises to unlock new possibilities in fields like augmented reality, virtual reality, and IoT (Internet of Things).
-   
-   Another game-changing innovation is the rise of foldable smartphones. These foldable devices combine the portability of a smartphone with the functionality of a tablet, providing users with flexible and versatile screens. They represent a shift in how we think about form factors and could reshape the future of mobile computing.
-   
-   Mobile app development has also flourished, with millions of apps available for download across various platforms. From social media apps to productivity tools, there's an app for almost everything, making our smartphones indispensable tools for both work and leisure.
-   
-   In addition to consumer applications, mobile technology is making a significant impact on various industries. Healthcare professionals use mobile devices to monitor patients' health remotely, educators incorporate mobile apps into the classroom, and businesses leverage mobile solutions to streamline operations and reach a global audience.
-   
-   The future of mobile technology holds even more promise. With ongoing advancements in artificial intelligence, mobile devices will become smarter and more intuitive, anticipating our needs and providing personalized experiences. Augmented reality (AR) and virtual reality (VR) will blur the lines between the digital and physical worlds, offering immersive experiences and new avenues for creativity.
-   
-   As we navigate the ever-evolving landscape of mobile technology, staying informed about the latest trends and innovations is essential. Mobile technology is not just a tool; it's a driving force behind societal and technological progress. It's a dynamic journey into the future, where possibilities are limitless, and the next breakthrough is always on the horizon.
-                        </p>      
-                        
-                        
-                    </div>
-    
-                    <div class="popup-container" id="popup">
-                        <div class="popup">
-                            <p class="popup-message">Are you sure you want to delete this post?</p>
-                           <div class="bb">
-                            <button class="popup-confirm-yes">Yes</button>
-                            <button class="popup-confirm-no">No</button>
-                       
-                           </div>
-                        </div>
-                    </div>
-    
-      
-                </div>
+                        </textarea>
+                    <p class="descx" id="descx">
+                            Mobile technology has revolutionized the way we live, work, and connect with the world. In today's fast-paced digital age, mobile devices have become an integral part of our daily lives, serving as our communication hub, entertainment center, and productivity tool, all in the palm of our hands.
+
+The evolution of mobile technology has been nothing short of remarkable. From the early days of brick-sized cell phones to the sleek and powerful smartphones of today, we've witnessed a rapid progression in both hardware and software. With each passing year, mobile devices become more sophisticated, offering cutting-edge features, high-speed connectivity, and stunning displays.
+
+One of the most significant milestones in mobile technology is the advent of 5G networks. This next-generation wireless technology has unleashed lightning-fast internet speeds, enabling seamless streaming, lag-free gaming, and real-time communication. As 5G continues to roll out globally, it promises to unlock new possibilities in fields like augmented reality, virtual reality, and IoT (Internet of Things).
+
+Another game-changing innovation is the rise of foldable smartphones. These foldable devices combine the portability of a smartphone with the functionality of a tablet, providing users with flexible and versatile screens. They represent a shift in how we think about form factors and could reshape the future of mobile computing.
+
+Mobile app development has also flourished, with millions of apps available for download across various platforms. From social media apps to productivity tools, there's an app for almost everything, making our smartphones indispensable tools for both work and leisure.
+
+In addition to consumer applications, mobile technology is making a significant impact on various industries. Healthcare professionals use mobile devices to monitor patients' health remotely, educators incorporate mobile apps into the classroom, and businesses leverage mobile solutions to streamline operations and reach a global audience.
+
+The future of mobile technology holds even more promise. With ongoing advancements in artificial intelligence, mobile devices will become smarter and more intuitive, anticipating our needs and providing personalized experiences. Augmented reality (AR) and virtual reality (VR) will blur the lines between the digital and physical worlds, offering immersive experiences and new avenues for creativity.
+
+As we navigate the ever-evolving landscape of mobile technology, staying informed about the latest trends and innovations is essential. Mobile technology is not just a tool; it's a driving force behind societal and technological progress. It's a dynamic journey into the future, where possibilities are limitless, and the next breakthrough is always on the horizon.
+                    </p>      
                     
-                    <div class="boxx">
-                        <div class="comment-container">
-                            <label for="comment" class="comment-label">Leave a Comment:</label>
-                            <textarea id="comment" name="comment" class="comment-textarea" rows="4" cols="50" placeholder="Write your comment here..."></textarea>
-                            <button type="submit" class="comment-button">Submit</button>
+                    
+                </div>
+
+                <div class="popup-container" id="popup">
+                    <div class="popup">
+                        <p class="popup-message">Are you sure you want to delete this post?</p>
+                       <div class="bb">
+                        <button class="popup-confirm-yes">Yes</button>
+                        <button class="popup-confirm-no">No</button>
+                   
+                       </div>
+                    </div>
+                </div>
+
+  
+            </div>
+                
+                <div class="boxx">
+                    <div class="comment-container">
+                        <label for="comment" class="comment-label">Leave a Comment:</label>
+                        <textarea id="comment" name="comment" class="comment-textarea" rows="4" cols="50" placeholder="Write your comment here..."></textarea>
+                        <button type="submit" class="comment-button">Submit</button>
+                    </div>
+
+                    <div class="comment-section">
+                        <div class="comment">
+                            <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
+                            <div class="comment-details">
+                                <p class="comment-author">John Doe</p>
+                                <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
+                            </div>
+                            <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
+
                         </div>
-
-                        <div class="comment-section">
-                            <div class="comment">
-                                <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
-                                <div class="comment-details">
-                                    <p class="comment-author">John Doe</p>
-                                    <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
-                                </div>
-                                <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
-
+                        <div class="comment">
+                            <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
+                            <div class="comment-details">
+                                <p class="comment-author">John Doe</p>
+                                <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
                             </div>
-                            <div class="comment">
-                                <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
-                                <div class="comment-details">
-                                    <p class="comment-author">John Doe</p>
-                                    <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
-                                </div>
-                                <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
+                            <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
 
+                        </div>
+                        <div class="comment">
+                            <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
+                            <div class="comment-details">
+                                <p class="comment-author">John Doe</p>
+                                <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
                             </div>
-                            <div class="comment">
-                                <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
-                                <div class="comment-details">
-                                    <p class="comment-author">John Doe</p>
-                                    <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
-                                </div>
-                                <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
+                            <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
 
+                        </div>
+                        <div class="comment">
+                            <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
+                            <div class="comment-details">
+                                <p class="comment-author">John Doe</p>
+                                <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
                             </div>
-                            <div class="comment">
-                                <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
-                                <div class="comment-details">
-                                    <p class="comment-author">John Doe</p>
-                                    <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
-                                </div>
-                                <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
+                            <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
 
+                        </div>
+                        <div class="comment">
+                            <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
+                            <div class="comment-details">
+                                <p class="comment-author">John Doe</p>
+                                <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
                             </div>
-                            <div class="comment">
-                                <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
-                                <div class="comment-details">
-                                    <p class="comment-author">John Doe</p>
-                                    <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
-                                </div>
-                                <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
+                            <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
 
+                        </div>
+                        <div class="comment">
+                            <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
+                            <div class="comment-details">
+                                <p class="comment-author">John Doe</p>
+                                <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
                             </div>
-                            <div class="comment">
-                                <img src="./image/profile.jpg" alt="Profile Picture" class="comment-profile-pic">
-                                <div class="comment-details">
-                                    <p class="comment-author">John Doe</p>
-                                    <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
-                                </div>
-                                <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
+                            <img src="/image/delete-svgrepo-com.svg" alt="" class="delete">
 
-                            </div>
-                     </div>
-                    </div>
-         
+                        </div>
+                 </div>
                 </div>
-            
-       
-            <div class="right">
-                <div class="rel">
-                    <span class="most">RELATED POST</span>
-                    <div class="lines"></div>
-                </div>
-                <div class="rightt">
-                    <div class="rights">
-                      
-                        <img src="./image/background (2).jpg" alt="image">
-                        <span class="tite">
-                            To change the background color of the success message to a popular
-                        </span>
-                    </div>
-                    <div class="rights">
-                        <img src="./image/background (2).jpg" alt="image">
-                        <span class="tite">
-                            To change the background color of the success message to a popular
-                        </span>
-                    </div>
-                    <div class="rights">
-                        <img src="./image/background (2).jpg" alt="image">
-                        <span class="tite">
-                            To change the background color of the success message to a popular
-                        </span>
-                    </div>
-                </div>
-           
-         
+     
             </div>
-        </div>
         
-
-    </main>
-
-    <footer>
-        <div class="container">
-            <div class="social-icons">
-                <a href="https://t.me/Masri404" target="_blank"><img src="image/telegram-outline-svgrepo-com.svg" alt=""></a>
-                <a href="https://www.linkedin.com/in/masresha-alemu-851241232"><img src="./image/linkedin-svgrepo-com.svg" alt="LinkedIn"></a>
-                <a href="mailto:masrialemu@gmail.com">
-                    <img src="./image/gmail-svgrepo-com (1).svg" alt="Gmail">
-                </a>
-                <a href="https://github.com/masrialemu"><img src="./image/github-142-svgrepo-com.svg" alt="github"></a>
+   
+        <div class="right">
+            <div class="rel">
+                <span class="most">RELATED POST</span>
+                <div class="lines"></div>
             </div>
-            <div class="about-me">
-                <h3>About Me</h3>
-                <p>
-                    Welcome to Technology Blog! I'm Masresha Alemu, your guide to the latest in tech news,
-                    gadgets, and digital trends. Join me on this journey as we explore the exciting world of technology.
-                </p>
+            <div class="rightt">
+                <div class="rights">
+                  
+                    <img src="./image/background (2).jpg" alt="image">
+                    <span class="tite">
+                        To change the background color of the success message to a popular
+                    </span>
+                </div>
+                <div class="rights">
+                    <img src="./image/background (2).jpg" alt="image">
+                    <span class="tite">
+                        To change the background color of the success message to a popular
+                    </span>
+                </div>
+                <div class="rights">
+                    <img src="./image/background (2).jpg" alt="image">
+                    <span class="tite">
+                        To change the background color of the success message to a popular
+                    </span>
+                </div>
             </div>
-            <p>&copy; 2023 Technology Blog</p>
+       
+     
         </div>
-    </footer>
+    </div>
     
-    <script src="./script/detail.js"></script>
-    <script src="./script/home.js"></script>
-</body>
-</html>
+
+</main>
+
+
+  {% endblock %}

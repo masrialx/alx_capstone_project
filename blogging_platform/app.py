@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,session,flash,make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message  # Import Flask-Mail
@@ -10,6 +10,9 @@ from imgurpython import ImgurClient
 import os
 from werkzeug.utils import secure_filename
 from flask_jwt_extended import JWTManager,create_access_token,jwt_required,get_jwt_identity
+from flask import redirect, url_for, render_template, request
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+
 
 app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///market.db'
@@ -32,8 +35,12 @@ db=SQLAlchemy(app)
 bcrypt = Bcrypt(app) 
 mail = Mail(app)
 
+login_manager = LoginManager(app)
+login_manager.login_view = "login" 
 
-class User(db.Model):
+
+
+class User(UserMixin,db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -73,6 +80,8 @@ class ResetToken(db.Model):
         expiration_time = self.created_at + timedelta(hours=3)
         return datetime.utcnow() <= expiration_time
 
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 # Define your Imgur client ID and secret
@@ -84,54 +93,54 @@ imgur_client = ImgurClient(IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET)
 
 
 
-# //////////create_post/////////////////
 
-@app.route('/post', methods=['POST'])
-@jwt_required()
-def create_post():
-    data = request.form
 
-    # Check if the user exists
-    user = User.query.filter_by(email=data['email']).first()
+@app.route('/post', methods=['GET', 'POST'])
+@login_required
+def post():
+    if request.method == 'POST':
+        title = request.form['title']
+        category = request.form['category']
+        description = request.form['description']
+        user_id = current_user.id  # Get the current user's ID
 
-    if not user:
-        return jsonify({'message': 'User not found'}), 404
+        imgur_link = None  # Initialize imgur_link to None
 
-    imgur_link = None
+        if 'file' in request.files:
+            image_file = request.files['file']
+            if image_file and allowed_file(image_file.filename):
+                filename = secure_filename(image_file.filename)
+                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image_file.save(image_path)
+                imgur_response = upload_image_to_imgur(image_path)
 
-    # Check if an image file is provided in the request
-    if 'file' in request.files:
-        image_file = request.files['file']
-        if image_file and allowed_file(image_file.filename):
-            filename = secure_filename(image_file.filename)
-            image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            image_file.save(image_path)
-            imgur_response = upload_image_to_imgur(image_path)
+                if imgur_response:
+                    imgur_link = imgur_response['link']
 
-            if imgur_response:
-                imgur_link = imgur_response['link']
-            else:
-                return jsonify({'message': 'Image upload to Imgur failed'}), 500
-        else:
-            return jsonify({'message': 'File upload failed. Allowed file extensions: png, jpg, jpeg, gif'}), 400
+        current_time = datetime.utcnow()
 
-    # Generate the current timestamp
-    current_time = datetime.utcnow()
+        new_post = Post(
+            title=title,
+            category=category,
+            description=description,
+            user_id=user_id,
+            time=current_time,
+            image=imgur_link  # Assign the imgur link if it exists
+        )
 
-    new_post = Post(
-        title=data['title'],
-        category=data['category'],
-        time=current_time,
-        image=imgur_link,  # Store the Imgur link in the database
-        description=data['description'],
-        user_id=user.id
-    )
-    db.session.add(new_post)
-    db.session.commit()
+        db.session.add(new_post)
+        db.session.commit()
 
-    return jsonify({'message': 'Post created successfully'}), 201
+        access_token = create_access_token(identity=current_user.id)
 
-# Helper functions
+        response = make_response(jsonify({'message': 'Post created successfully'}), 201)  # Use make_response
+        response.headers['Authorization'] = f'Bearer {access_token}'
+
+        return redirect(url_for('home'))
+
+    return render_template('post.html')
+
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
@@ -142,6 +151,7 @@ def upload_image_to_imgur(image_file):
     except Exception as e:
         print(f'Error uploading image to Imgur: {str(e)}')
         return None
+
 
 
 
@@ -227,8 +237,9 @@ def delete_post(post_id):
 
 
 
-@app.route('/posts', methods=['GET'])
-def get_posts():
+@app.route('/', methods=['GET','POST'])
+@app.route('/home', methods=['GET', 'POST'])
+def home():
     # Query all posts from the database
     posts = Post.query.all()
 
@@ -248,8 +259,8 @@ def get_posts():
         }
         post_list.append(post_data)
 
-    # Return the list of posts as JSON
-    return jsonify({'posts': post_list})
+    # Pass the post data to the 'home.html' template
+    return render_template('home.html', posts=post_list)
 
 
 # ///////////endpost/////////////
@@ -310,52 +321,83 @@ def get_all_users():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/login', methods=['POST'])
+
+
+
+
+
+
+
+
+@app.route('/contact', methods=['GET','POST'])
+def contact():
+    return render_template('contact.html')
+
+@app.route('/detail/<id>', methods=['GET','POST'])
+def detail():
+    return render_template('detail.html')
+
+
+
+@app.route('/logout', methods=['GET'])
+@login_required
+def logout():
+    logout_user()
+    flash("You have been logged out.", "success")
+    return redirect(url_for('login'))  # Redirect to the login page
+
+
+# @app.route('/login', methods=['GET', 'POST'])
+# def login():
+#     if request.method == 'POST':
+#         email = request.form['email']
+#         password = request.form['password']
+    
+#         user = User.query.filter_by(email=email).first()
+
+#         if user and bcrypt.check_password_hash(user.password, password):
+#             # Set the 'user_is_logged_in' session variable to indicate the user is logged in
+#             session['user_is_logged_in'] = True
+
+#             # Create an access token if you want to use JWT for authorization
+#             access_token = create_access_token(identity=user.id)
+
+#             # Redirect to the home page with the access token as a query parameter
+#             return redirect(url_for('home', access_token=access_token))
+
+#         return jsonify({'message': 'Invalid username or password'}), 400  # Return an error message
+
+#     # Handle GET requests by rendering the login form
+#     return render_template('login.html')
+
+
+# Assuming you have already configured and initialized Flask-Login and Flask-JWT-Extended
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
 
-    user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email).first()
 
-    if user and bcrypt.check_password_hash(user.password, password):
-        access_token = create_access_token(identity=user.id)  # Create a JWT token
-        return jsonify({'access_token': access_token}), 200
-    else:
-        return jsonify({'message': 'Invalid email or password'}), 401
+        if user and bcrypt.check_password_hash(user.password, password):
+            # Log in the user using Flask-Login
+            login_user(user)
 
+            # Create an access token if you want to use JWT for authorization
+            access_token = create_access_token(identity=user.id)
 
+            # Redirect to the home page with the access token as a query parameter
+            return redirect(url_for('home', access_token=access_token))
 
-# @app.route('/register', methods=['POST'])
-# def register_user():
-#     data = request.get_json()
-    
-#     # Check if the username or email already exists
-#     existing_user = User.query.filter_by(username=data['username']).first() or User.query.filter_by(email=data['email']).first()
-    
-#     if existing_user:
-#         return jsonify({'message': 'Username or email already exists'}), 400
+        return jsonify({'message': 'Invalid username or password'}), 400  # Return an error message
 
-#     # Create a new user
-#     new_user = User(
-#         # public_id=new_public_id,
-#         username=data['username'],
-#         email=data['email'],
-#         name=data['name'],
-#         profilepic=data.get('profilepic')  # Set profilepic if provided, otherwise it will be None
-#     )
-    
-#     # Hash the password using bcrypt
-#     hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-#     new_user.password = hashed_password
+    # Handle GET requests by rendering the login form
+    return render_template('login.html')
 
-#     db.session.add(new_user)
-#     db.session.commit()
+# Use the @login_required decorator to protect routes that require authentication
 
-#     return jsonify({'message': 'User registered successfully'}), 201
-
-
-import requests
 
 # Define a function to generate avatars based on user data
 def generate_avatar(username):
@@ -363,35 +405,43 @@ def generate_avatar(username):
     avatar_url = f"https://ui-avatars.com/api/?name={username}&background=random"
     return avatar_url
 
-@app.route('/register', methods=['POST'])
-def register_user():
-    data = request.get_json()
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        # Generate a unique avatar for the user based on their username
+        profilepic_url = generate_avatar(request.form['username'])  # Define this function
+        name = request.form['name']
+        email = request.form['email']
+        username = request.form['username']
+        password = request.form['password']
 
-    # Check if the username or email already exists
-    existing_user = User.query.filter_by(username=data['username']).first() or User.query.filter_by(email=data['email']).first()
+        # Check if the username or email already exists
+        existing_user = User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first()
 
-    if existing_user:
-        return jsonify({'message': 'Username or email already exists'}), 400
+        if existing_user:
+            return jsonify({'message': 'Username or email already exists'}), 400
 
-    # Generate a unique avatar for the user based on their username
-    profilepic_url = generate_avatar(data['username'])
+        # Create a new user
+        new_user = User(
+            username=username,
+            email=email,
+            name=name,
+            profilepic=profilepic_url
+        )
 
-    # Create a new user
-    new_user = User(
-        username=data['username'],
-        email=data['email'],
-        name=data['name'],
-        profilepic=profilepic_url  # Set the profile picture URL
-    )
+        # Hash the password using bcrypt
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        new_user.password = hashed_password
 
-    # Hash the password using bcrypt
-    hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-    new_user.password = hashed_password
+        # Assuming you have a database session, add the user and commit the session
+        db.session.add(new_user)
+        db.session.commit()
 
-    db.session.add(new_user)
-    db.session.commit()
+        return redirect(url_for('login'))  # Redirect to the signin page on successful signup
 
-    return jsonify({'message': 'User registered successfully'}), 201
+    return render_template('signup.html')
+
+
 
 
 # //////////endregister///////////////
@@ -399,113 +449,197 @@ def register_user():
 
 # /////////////reset_password//////////
 
-@app.route('/request_reset_password', methods=['POST'])
-def request_reset_password():
-    data = request.get_json()
-    email = data.get('email')
-    user = User.query.filter_by(email=email).first()
+# @app.route('/forget', methods=['POST'])
+# def request_reset_password():
+#     data = request.get_json()
+#     email = data.get('email')
+#     user = User.query.filter_by(email=email).first()
 
-    if not user:
-        return jsonify({'message': 'Email not found'}), 400
+#     if not user:
+#         return jsonify({'message': 'Email not found'}), 400
 
-    # Generate a unique reset token
-    reset_token = secrets.token_urlsafe(32)
+#     # Generate a unique reset token
+#     reset_token = secrets.token_urlsafe(32)
 
-    # Store the reset token in the database
-    reset_token_entry = ResetToken(user_id=user.id, token=reset_token)
-    db.session.add(reset_token_entry)
-    db.session.commit()
+#     # Store the reset token in the database
+#     reset_token_entry = ResetToken(user_id=user.id, token=reset_token)
+#     db.session.add(reset_token_entry)
+#     db.session.commit()
 
-    # Send the reset token to the user's email with HTML and CSS styling
-    reset_link = f"http://localhost:5000/reset_password?token={reset_token}"  # Update URL accordingly
+#     # Send the reset token to the user's email with HTML and CSS styling
+#     reset_link = f"http://localhost:5000/reset_password?token={reset_token}"  # Update URL accordingly
 
-    # Create an HTML email with CSS styling
-    msg = Message('Password Reset', recipients=[email])
-    msg.html = f"""
-     <html>
-      <head>
-        <style>
-            /* Add your CSS styling here */
-            body {{
-                font-family: Arial, sans-serif;
-                background-color: #f5f5f5;
-                margin: 0;
-                padding: 0;
-            }}
-            .container {{
-                max-width: 600px;
-                margin: 0 auto;
-                padding: 20px;
-            }}
-            .content {{
-                background-color: #ffffff;
-                padding: 20px;
-                border-radius: 5px;
-            }}
-            .button {{
-                display: inline-block;
-                background-color: #007BFF;
-                color: #fff;
-                padding: 12px 24px;
-                border-radius: 5px;
-                text-decoration: none;
-                font-weight: bold;
-            }}
-            .button:hover {{
-                background-color: #0056b3;
-            }}
-            .message {{
-                color: #555;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="content">
-                <h2>Password Reset</h2>
-                <p class="message">You've requested a password reset. Click the button below to reset your password:</p>
-                <a class="button" href="{reset_link}">Reset Password</a>
-                <p class="message" style="color: white;">Please note that this reset link will expire after 3 hours.</p>
-            </div>
-        </div>
-     </body>
-    </html>
-    """
+#     # Create an HTML email with CSS styling
+#     msg = Message('Password Reset', recipients=[email])
+#     msg.html = f"""
+#      <html>
+#       <head>
+#         <style>
+#             /* Add your CSS styling here */
+#             body {{
+#                 font-family: Arial, sans-serif;
+#                 background-color: #f5f5f5;
+#                 margin: 0;
+#                 padding: 0;
+#             }}
+#             .container {{
+#                 max-width: 600px;
+#                 margin: 0 auto;
+#                 padding: 20px;
+#             }}
+#             .content {{
+#                 background-color: #ffffff;
+#                 padding: 20px;
+#                 border-radius: 5px;
+#             }}
+#             .button {{
+#                 display: inline-block;
+#                 background-color: #007BFF;
+#                 color: #fff;
+#                 padding: 12px 24px;
+#                 border-radius: 5px;
+#                 text-decoration: none;
+#                 font-weight: bold;
+#             }}
+#             .button:hover {{
+#                 background-color: #0056b3;
+#             }}
+#             .message {{
+#                 color: #555;
+#             }}
+#         </style>
+#     </head>
+#     <body>
+#         <div class="container">
+#             <div class="content">
+#                 <h2>Password Reset</h2>
+#                 <p class="message">You've requested a password reset. Click the button below to reset your password:</p>
+#                 <a class="button" href="{reset_link}">Reset Password</a>
+#                 <p class="message" style="color: white;">Please note that this reset link will expire after 3 hours.</p>
+#             </div>
+#         </div>
+#      </body>
+#     </html>
+#     """
  
 
 
-    try:
-        mail.send(msg)  # Send the email
-        return jsonify({'message': 'Password reset email sent'})
-    except Exception as e:
-        # Log the error
-        traceback.print_exc()
-        return jsonify({'message': f'Email not sent: {str(e)}'}), 500
+#     try:
+#         mail.send(msg)  # Send the email
+#         return jsonify({'message': 'Password reset email sent'})
+#     except Exception as e:
+#         # Log the error
+#         traceback.print_exc()
+#         return jsonify({'message': f'Email not sent: {str(e)}'}), 500
 
-@app.route('/reset_password', methods=['POST'])
-def reset_password():
-    data = request.get_json()
-    token = data.get('token')
-    new_password = data.get('new_password')
 
-    reset_token_entry = ResetToken.query.filter_by(token=token).first()
-    if not reset_token_entry:
-        return jsonify({'message': 'Invalid reset token'}), 400
 
-    if not reset_token_entry.is_valid():
-        return jsonify({'message': 'Reset token has expired'}), 400
+@app.route('/forget', methods=['GET', 'POST'])
+def forget():
+    if request.method == 'POST':
+        email = request.form['email']
+        user = User.query.filter_by(email=email).first()
 
-    user = User.query.get(reset_token_entry.user_id)
+        if user:
+            # Generate a unique reset token
+            reset_token = secrets.token_urlsafe(32)
 
-    # Update the user's password with the new password
-    hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-    user.password = hashed_password
+            # Store the reset token in the database
+            reset_token_entry = ResetToken(user_id=user.id, token=reset_token)
+            db.session.add(reset_token_entry)
+            db.session.commit()
 
-    # Remove the used reset token from the database
-    db.session.delete(reset_token_entry)
-    db.session.commit()
+            # Send the reset token to the user's email with HTML and CSS styling
+            reset_link = f"http://localhost:5000/reset?token={reset_token}"  # Update URL accordingly
 
-    return jsonify({'message': 'Password reset successful'})
+            # Create an HTML email with CSS styling
+            msg = Message('Password Reset', recipients=[email])
+            msg.html = f"""
+            <html>
+            <head>
+                <style>
+                    /* Add your CSS styling here */
+                </style>
+            </head>
+            <body>
+                <h2>Password Reset</h2>
+                <p>You've requested a password reset. Click the button below to reset your password:</p>
+                <a href="{reset_link}">Reset Password</a>
+            </body>
+            </html>
+            """
+
+            try:
+                mail.send(msg)  # Send the email
+                flash('Password reset email sent. Please check your inbox.', 'success')
+            except Exception as e:
+                # Log the error
+                traceback.print_exc()
+                flash(f'Email not sent: {str(e)}', 'error')
+        else:
+            flash('Email not found. Please enter a valid email address.', 'error')
+
+    return render_template('forget.html')
+
+@app.route('/reset', methods=['GET', 'POST'])
+def reset():
+    if request.method == 'POST':
+        token = request.form['token']
+        new_password = request.form['password']
+        
+        reset_token_entry = ResetToken.query.filter_by(token=token).first()
+        if not reset_token_entry:
+            return jsonify({'message': 'Invalid reset token'}), 400
+
+        if not reset_token_entry.is_valid():
+            return jsonify({'message': 'Reset token has expired'}), 400
+
+        user = User.query.get(reset_token_entry.user_id)
+
+        # Update the user's password with the new password
+        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        user.password = hashed_password
+
+        # Remove the used reset token from the database
+        db.session.delete(reset_token_entry)
+        db.session.commit()
+
+        # Redirect the user to the login page after a successful password reset
+        return redirect(url_for('login'))
+
+    # Render the "reset.html" template with the token
+    return render_template('reset.html', token=request.args.get('token'))
+
+# @app.route('/reset', methods=['GET', 'POST'])
+# def reset():
+#     if request.method == 'POST':
+#         data = request.form
+#         token = data.get('token')
+#         new_password = data.get('new_password')
+        
+#         reset_token_entry = ResetToken.query.filter_by(token=token).first()
+#         if not reset_token_entry:
+#             return jsonify({'message': 'Invalid reset token'}), 400
+
+#         if not reset_token_entry.is_valid():
+#             return jsonify({'message': 'Reset token has expired'}), 400
+
+#         user = User.query.get(reset_token_entry.user_id)
+
+#         # Update the user's password with the new password
+#         hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+#         user.password = hashed_password
+
+#         # Remove the used reset token from the database
+#         db.session.delete(reset_token_entry)
+#         db.session.commit()
+
+#         # Redirect the user to the login page after a successful password reset
+#         return redirect(url_for('login'))
+
+#     return render_template('reset.html')
+
+
 
 # /////////////end reset_password//////////
 
@@ -593,22 +727,17 @@ def delete_comment(comment_id):
     return jsonify({'message': 'Comment deleted successfully'})
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    # Load the user by user ID
+    return User.query.get(int(user_id))
+
 
 # //////////////endcomment///////////
-
-@app.route('/protected', methods=['GET'])
-@jwt_required()
-def protected_route():
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)
-    
-    # Your protected route logic here
-    # For example, you can return user-specific data or perform actions specific to the user.
-    # You can also access the 'user' object to work with the authenticated user's data.
-
-    return jsonify({'message': 'Welcome, ' + user.username})  # Example response
-
-
+@app.after_request
+def add_header(response):
+    response.cache_control.max_age = 300  # Adjust this value as needed
+    return response
 
 if __name__ == '__main__':
     db.create_all()

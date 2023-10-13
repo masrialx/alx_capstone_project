@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/home.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/login.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/home.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/post.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/contact.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/detail.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/signup.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/login.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/header.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
+</head>
+<body>
+ 
+    {% block header %} 
+
+    {% endblock %} 
+
+    {% block main %}
+  
+    {% endblock %}
+
+    <footer>
+        <div class="container">
+            <div class="social-icons">
+                <a href="https://t.me/Masri404" target="_blank">
+                    <img src="{{ url_for('static', filename='image/telegram-outline-svgrepo-com.svg') }}" alt="">
+                </a>
+                <a href="https://www.linkedin.com/in/masresha-alemu-851241232">
+                    <img src="{{ url_for('static', filename='image/linkedin-svgrepo-com.svg') }}" alt="LinkedIn">
+                </a>
+                <a href="mailto:masrialemu@gmail.com">
+                    <img src="{{ url_for('static', filename='image/gmail-svgrepo-com (1).svg') }}" alt="Gmail">
+                </a>
+                <a href="https://github.com/masrialemu">
+                    <img src="{{ url_for('static', filename='image/github-142-svgrepo-com.svg') }}" alt="GitHub">
+                </a>
+            </div>
+            <div class="about-me">
+                <h3>About Me</h3>
+                <p>
+                    Welcome to Technology Blog! I'm Masresha Alemu, your guide to the latest in tech news,
+                    gadgets, and digital trends. Join me on this journey as we explore the exciting world of technology.
+                </p>
+            </div>
+            <p>&copy; 2023 Technology Blog</p>
+        </div>
+    </footer>
+    
+
+
+    <script src="{{ url_for('static', filename='script/home.js') }}"></script>
+    <script src="{{ url_for('static', filename='script/signup.js') }}"></script>
+    <script src="{{ url_for('static', filename='script/detail.js') }}"></script>
+    <script src="{{ url_for('static', filename='script/reset.js') }}"></script>
+   
+
+
+</body>
+</html>

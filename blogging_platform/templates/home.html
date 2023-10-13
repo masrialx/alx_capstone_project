@@ -1,164 +1,114 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="style/home.css">
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-</head>
-<body>
-    <header>
-     <div class="header">
-        <div class="headers" id="headersx">
-            <div class="logo">
-                <img src="./image/Logo (2).svg" alt="logo">
-            </div>
-            <div class="list" id="list">
-                <ul id="act">
-                    <a href="./home.html"><li class="active">Home</li></a>
-                    <a href="./post.html"><li>Post</li></a>
-                    <a href="./contact.html"><li>Contact</li></a>
-                    <a href="./login.html" class="login" id="login">Login</a>
-                  
-                </ul>
-                <div class="listbtn">
-                        <img src="./image/list-ul-alt-svgrepo-com.svg" alt="btn" id="imglist">
-                </div>
-            </div>
-        </div>
-     </div>
+{% extends 'base.html' %}
 
-     <div class="title">
-        <div class="titles">
-           
-                <h1>Tech Insights</h1>
-                 <p class="desc">
-                    Stay updated with the latest in tech. Dive into the world of gadgets, coding, AI, and more. Join us as we explore the ever-evolving landscape of technology, providing you with insights, reviews, and news to keep you at the forefront of innovation
-                 </p>
-                 <button>See More</button>
-         
-        </div>
-     </div>
-    </header>
- 
-    <main>
-      <div class="find">
-        <div class="finds">
-            <div class="finds">
-                <div class="src">
-                <input type="text" class="search-input" placeholder="Search...">
-                <button class="search-button">Search</button>
-           
-                </div>
-                <div class="category-buttons">
-                    <button class="category-button active">All</button>
-                    <button class="category-button">Design</button>
-                    <button class="category-button">Tech</button>
-                    <button class="category-button">Mobile</button>
-                </div>
-             
-            </div>
-        </div>
-      </div>
+ {% block title %}
+ Home
+ {% endblock %}
 
 
-      <div class="data">
-        <div class="datas">
-         <div class="datax">
-            <img src="./image/background (2).jpg" alt="image" class="imgdata">
-            <div class="comm">
-                <span class="mobile">MOBILE</span>
-            </div>
-            <span class="tit">
-                How to Fix Water Damage on Your Mobile Device
-            </span>
-            <span class="date" >12 FEB 2023</span>
-            <span class="desc" id="limitedText">
-                Accidents happen, and sometimes our mobile devices get exposed to water. Learn effective steps to rescue and repair your water-damaged phone or tablet. Don't panic—follow our guide to bring your device back to life and save your data.
-            </span>
-            <div class="posts">
-                <img src="/Blogging Platform/image/profile.jpg" alt="post" class="postimg">
-                <span class="name">Masresha Alemu</span>
-                <img src="./image/comment-5-svgrepo-com.svg" alt="" class="commx">
-            </div>
-         </div>
+ {% block header %}
 
-         <div class="datax">
-            <img src="./image/background (2).jpg" alt="image" class="imgdata">
-            <span class="mobile">MOBILE</span>
-            <span class="tit">
-                How to Fix Water Damage on Your Mobile Device
-            </span>
-            <span class="date" >12 FEB 2023</span>
-            <span class="desc" id="limitedText">
-                Accidents happen, and sometimes our mobile devices get exposed to water. Learn effective steps to rescue and repair your water-damaged phone or tablet. Don't panic—follow our guide to bring your device back to life and save your data.
-            </span>
-            <div class="posts">
-                <img src="/Blogging Platform/image/profile.jpg" alt="post" class="postimg">
-                <span class="name">Masresha Alemu</span>
+ <header class="headerss">
+    <div class="header">
+       <div class="headers" id="headersx">
+           <div class="logo">
+               <img src="{{ url_for('static', filename='image/Logo (2).svg') }}" alt="logo">
+           </div>
+           <div class="list" id="list">
+            <ul id="act">
+                <a href="{{ url_for('home') }}"><li class="active">Home</li></a>
+                <a href="{{ url_for('post') }}"><li>Post</li></a>
+                <a href="{{ url_for('contact') }}"><li>Contact</li></a>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('logout') }}" class="login" id="login">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="login" id="login">Login</a>
+            {% endif %}                
+                
+            </ul>
+            
+               <div class="listbtn">
+                <!-- <img src="{{ url_for('static', filename='image/cancel-svgrepo-com (3).svg') }}" alt="btn" id="imgcancel" > -->
+                <img src="{{ url_for('static', filename='image/list-ul-alt-svgrepo-com.svg') }}" alt="btn" id="imglist ">
+               
             </div>
-         </div>
+           </div>
+       </div>
+    </div>
 
-         <div class="datax">
-            <img src="./image/background (2).jpg" alt="image" class="imgdata">
-            <span class="mobile">MOBILE</span>
-            <span class="tit">
-                How to Fix Water Damage on Your Mobile Device
-            </span>
-            <span class="date" >12 FEB 2023</span>
-            <span class="desc" id="limitedText">
-                Accidents happen, and sometimes our mobile devices get exposed to water. Learn effective steps to rescue and repair your water-damaged phone or tablet. Don't panic—follow our guide to bring your device back to life and save your data.
-            </span>
-            <div class="posts">
-                <img src="/Blogging Platform/image/profile.jpg" alt="post" class="postimg">
-                <span class="name">Masresha Alemu</span>
-            </div>
-         </div>
-
-         <div class="datax">
-            <img src="./image/background (2).jpg" alt="image" class="imgdata">
-            <span class="mobile">MOBILE</span>
-            <span class="tit">
-                How to Fix Water Damage on Your Mobile Device
-            </span>
-            <span class="date" >12 FEB 2023</span>
-            <span class="desc" id="limitedText">
-                Accidents happen, and sometimes our mobile devices get exposed to water. Learn effective steps to rescue and repair your water-damaged phone or tablet. Don't panic—follow our guide to bring your device back to life and save your data.
-            </span>
-            <div class="posts">
-                <img src="/Blogging Platform/image/profile.jpg" alt="post" class="postimg">
-                <span class="name">Masresha Alemu</span>
-            </div>
-         </div>
-         
-        </div>
-      </div>
-
-    </main>
-
-    <footer>
-        <div class="container">
-            <div class="social-icons">
-                <a href="https://t.me/Masri404" target="_blank"><img src="image/telegram-outline-svgrepo-com.svg" alt=""></a>
-                <a href="https://www.linkedin.com/in/masresha-alemu-851241232"><img src="./image/linkedin-svgrepo-com.svg" alt="LinkedIn"></a>
-                <a href="mailto:masrialemu@gmail.com">
-                    <img src="./image/gmail-svgrepo-com (1).svg" alt="Gmail">
-                </a>
-                <a href="https://github.com/masrialemu"><img src="./image/github-142-svgrepo-com.svg" alt="github"></a>
-            </div>
-            <div class="about-me">
-                <h3>About Me</h3>
-                <p>
-                    Welcome to Technology Blog! I'm Masresha Alemu, your guide to the latest in tech news,
-                    gadgets, and digital trends. Join me on this journey as we explore the exciting world of technology.
+    <div class="title">
+       <div class="titles">
+          
+               <h1>Tech Insights</h1>
+                <p class="desc">
+                   Stay updated with the latest in tech. Dive into the world of gadgets, coding, AI, and more. Join us as we explore the ever-evolving landscape of technology, providing you with insights, reviews, and news to keep you at the forefront of innovation
                 </p>
-            </div>
-            <p>&copy; 2023 Technology Blog</p>
-        </div>
-    </footer>
-    
+                <button>See More</button>
+        
+       </div>
+    </div>
+ </header>
 
-    <script src="./script/home.js"></script>
-</body>
-</html>
+ {% endblock %}
+
+
+ {% block main %}
+
+ <main>
+    <div class="find">
+      <div class="finds">
+          <div class="finds">
+              <div class="src">
+              <input type="text" class="search-input" placeholder="Search...">
+              <button class="search-button">Search</button>
+         
+              </div>
+              <div class="category-buttons">
+                  <button class="category-button active">All</button>
+                  <button class="category-button">Design</button>
+                  <button class="category-button">Tech</button>
+                  <button class="category-button">Mobile</button>
+              </div>
+           
+          </div>
+      </div>
+    </div>
+
+
+    <div class="data">
+      <div class="datas">
+        {% for post in posts %}
+       <div class="datax">
+        <img src="{{ post.image }}" alt="image" class="imgdata">
+
+          <!-- <img src="./image/background (2).jpg" alt="image" class="imgdata"> -->
+          <div class="comm">
+              <span class="mobile">{{ post.category }}</span>
+          </div>
+          <span class="tit">
+            {{ post.title }}
+          </span>
+          <span class="date" >{{ post.time }}</span>
+          <span class="desc" id="limitedText">
+            {{ post.description }}
+                  </span>
+          <div class="posts">
+              <img src="{{ url_for('static', filename='image/profile.jpg') }}" alt="post" class="postimg">
+              <span class="name">Masresha Alemu</span>
+              <img src="{{ url_for('static', filename='image/comment-5-svgrepo-com.svg') }}" alt="" class="commx">
+          </div>
+       </div>
+       {% endfor %}
+
+     
+       
+      </div>
+    </div>
+
+  </main>
+
+
+ {% endblock %}
+
+
+  
+  

@@ -71,3 +71,22 @@
 .sign-up-link a:hover {
     text-decoration: underline;
 }
+
+.flash-messages{
+    position: absolute;
+    top: 10%;
+}
+/* Flash message container */
+ /* .flash-messages {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    background: #f44336;
+    color: white;
+    padding: 10px;
+}
+
+/* Flash message list */
+

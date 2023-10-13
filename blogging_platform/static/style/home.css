@@ -13,7 +13,7 @@ a{
 
 
 /* ///////////header/////////////////// */
-header{
+.headerss{
     width: 100%;
     min-height: 90vh;
     max-height: auto;
@@ -76,6 +76,9 @@ header{
 }
 
 .header .headers .list .login:hover{
+    background-color:rgb(148, 11, 11);
+}
+.activex{
     background-color:rgb(148, 11, 11);
 }
 .header .headers .list ul li:hover{

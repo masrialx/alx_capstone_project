@@ -1,87 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="style/header.css">
-    <link rel="stylesheet" href="style/login.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
-    <header>
-     <div class="header">
-        <div class="headers" id="headersx">
-            <div class="logo">
-                <img src="./image/Logo (2).svg" alt="logo">
-            </div>
-            <div class="list" id="list">
-                <ul id="act">
-                    <a href="./home.html"><li class="active">Home</li></a>
-                    <a href="./post.html"><li>Post</li></a>
-                    <a href="./contact.html"><li>Contact</li></a>
-                    <a href="./login.html" class="login" id="login">Login</a>
-                  
-                </ul>
-                <div class="listbtn">
-                        <img src="./image/list-ul-alt-svgrepo-com.svg" alt="btn" id="imglist">
-                </div>
-            </div>
+{% extends 'base.html' %}
+
+{% block title %}
+Login
+{% endblock %}
+
+ {% block header %}
+
+ <header>
+    <div class="header">
+       <div class="headers" id="headersx">
+           <div class="logo">
+               <img src="{{ url_for('static', filename='image/Logo (2).svg') }}" alt="logo">
+           </div>
+           <div class="list" id="list">
+               <ul id="act">
+                   <a href="{{ url_for('home') }}"><li >Home</li></a>
+                   <a href="{{ url_for('post') }}"><li>Post</li></a>
+                   <a href="{{ url_for('contact') }}"><li>Contact</li></a>
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('logout') }}" class="login" id="login">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="login" id="login">Login</a>
+                {% endif %}   
+
+                </a>                 </ul>
+               <div class="listbtn">
+                <img src="{{ url_for('static', filename='image/list-ul-alt-svgrepo-com.svg') }}" alt="btn" id="imglist ">
+               </div>
+           </div>
+       </div>
+    </div>
+
+</header>
+
+
+ {% endblock %} 
+
+{% block main %}
+
+<main class="login">
+    <div class="containerz">
+        <h1 class="login-title">Login</h1>
+        <form action="{{ url_for('login') }}" method="POST" class="login-form" id="login-form">
+            <label for="username" class="login-label">Email:</label>
+            <input type="text" id="username" name="email" required class="login-input">
+            <br>
+    
+            <label for= "password" class= "login-label">Password:</label>
+            <input type="password" id="password" name="password" required class="login-input">
+            <br>
+    
+            <input type="submit" value="Login" class="login-button">
+        </form>
+    
+        <div class="login-success" id="login-success">
+            Login successful!
         </div>
-     </div>
-
-    </header>
- 
-    <main class="login">
-        <div class="containerz">
-            <h1 class="login-title">Login</h1>
-            <form class="login-form" id="login-form">
-                <label for="username" class="login-label">Username:</label>
-                <input type="text" id="username" name="username" required class="login-input">
-                <br>
     
-                <label for="password" class="login-label">Password:</label>
-                <input type="password" id="password" name="password" required class="login-input">
-                <br>
-    
-                <input type="submit" value="Login" class="login-button">
-            </form>
-    
-            <div class="login-success" id="login-success">
-                Login successful!
-            </div>
-    
-            <div class="login-failure" id="login-failure">
-                Login failed. Please check your credentials and try again.
-            </div>
-    
-            <p class="sign-up-link">Don't have an account? <a href="signup.html">Sign Up</a></p>
+        <div class="login-failure" id="login-failure">
+            Login failed. Please check your credentials and try again.
         </div>
-        <p class="sign-up-link"> <a href="forget.html">Forget Password</a></p>
-
-    </main>
-
-    <footer>
-        <div class="container">
-            <div class="social-icons">
-                <a href="https://t.me/Masri404" target="_blank"><img src="image/telegram-outline-svgrepo-com.svg" alt=""></a>
-                <a href="https://www.linkedin.com/in/masresha-alemu-851241232"><img src="./image/linkedin-svgrepo-com.svg" alt="LinkedIn"></a>
-                <a href="mailto:masrialemu@gmail.com">
-                    <img src="./image/gmail-svgrepo-com (1).svg" alt="Gmail">
-                </a>
-                <a href="https://github.com/masrialemu"><img src="./image/github-142-svgrepo-com.svg" alt="github"></a>
-            </div>
-            <div class="about-me">
-                <h3>About Me</h3>
-                <p>
-                    Welcome to Technology Blog! I'm Masresha Alemu, your guide to the latest in tech news,
-                    gadgets, and digital trends. Join me on this journey as we explore the exciting world of technology.
-                </p>
-            </div>
-            <p>&copy; 2023 Technology Blog</p>
-        </div>
-    </footer>
     
+        <p class="sign-up-link">Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+    </div>
+        
+    <p class="sign-up-link"> <a href="{{ url_for('forget') }}">Forget Password</a></p>
 
-    <script src="./script/home.js"></script>
-</body>
-</html>
+</main>
+
+
+{% endblock %}
