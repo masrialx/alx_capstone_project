@@ -74,12 +74,15 @@
     </div>
 
 
-    <div class="data">
+    <div class="data" >
       <div class="datas">
         {% for post in posts %}
-       <div class="datax">
-        <img src="{{ post.image }}" alt="image" class="imgdata">
-
+        <a href="{{ url_for('view_post', post_id=post.id) }}">hhhh</a>
+        <div class="datax">
+        <img src="" alt="" srcset="">
+        {% if post.image %}
+        <img src="{{ post.image }}" alt="Post Image" class="imgdata" >
+        {% endif %}
           <!-- <img src="./image/background (2).jpg" alt="image" class="imgdata"> -->
           <div class="comm">
               <span class="mobile">{{ post.category }}</span>
@@ -92,8 +95,8 @@
             {{ post.description }}
                   </span>
           <div class="posts">
-              <img src="{{ url_for('static', filename='image/profile.jpg') }}" alt="post" class="postimg">
-              <span class="name">Masresha Alemu</span>
+              <img src="{{ post.profile_pic }}" alt="profile" class="postimg">
+              <span class="name">{{post.username}}</span>
               <img src="{{ url_for('static', filename='image/comment-5-svgrepo-com.svg') }}" alt="" class="commx">
           </div>
        </div>

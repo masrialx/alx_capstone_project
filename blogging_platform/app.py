@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify,session,flash,make_response
+from flask import Flask, request, jsonify,session,flash,make_response,send_from_directory,send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message  # Import Flask-Mail
@@ -12,9 +12,14 @@ from werkzeug.utils import secure_filename
 from flask_jwt_extended import JWTManager,create_access_token,jwt_required,get_jwt_identity
 from flask import redirect, url_for, render_template, request
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from cloudinary.uploader import upload
+from cloudinary.utils import cloudinary_url
+import requests
 
 
-app=Flask(__name__)
+
+app = Flask(__name__, static_folder='static')
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///market.db'
 app.config['SECRET_KEY']='72d630c0cef6c01bff062d80'
 
@@ -30,6 +35,9 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}  # Allowed image file extensions
 app.config['JWT_SECRET_KEY'] = '72d630c0cef6c01bff062d80'  # Replace with a strong secret key
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)  # Set token expiration time
+
+
+
 jwt = JWTManager(app)
 db=SQLAlchemy(app)
 bcrypt = Bcrypt(app) 
@@ -60,6 +68,7 @@ class Post(db.Model):
     description = db.Column(db.Text, nullable=False, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     comments = db.relationship('Comment', backref='post', lazy=True)
+
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -94,152 +103,59 @@ imgur_client = ImgurClient(IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET)
 
 
 
+# @app.route('/post/edit/<int:post_id>', methods=['PUT'])
+# @jwt_required()
+# def edit_post(post_id):
+#     # Check if the post exists
+#     post = Post.query.get(post_id)
 
-@app.route('/post', methods=['GET', 'POST'])
-@login_required
-def post():
-    if request.method == 'POST':
-        title = request.form['title']
-        category = request.form['category']
-        description = request.form['description']
-        user_id = current_user.id  # Get the current user's ID
+#     if not post:
+#         return jsonify({'message': 'Post not found'}), 404
 
-        imgur_link = None  # Initialize imgur_link to None
+#     # Check if the user is authorized to edit the post
+#     user_email = request.form.get('email')  # You might need to adapt this based on your request format
+#     user = User.query.filter_by(email=user_email).first()
 
-        if 'file' in request.files:
-            image_file = request.files['file']
-            if image_file and allowed_file(image_file.filename):
-                filename = secure_filename(image_file.filename)
-                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                image_file.save(image_path)
-                imgur_response = upload_image_to_imgur(image_path)
+#     if not user:
+#         return jsonify({'message': 'User not found'}), 404
 
-                if imgur_response:
-                    imgur_link = imgur_response['link']
+#     # Check if the user is the author of the post or has admin privileges
+#     if post.user_id != user.id and not user.admin:
+#         return jsonify({'message': 'Unauthorized to edit this post'}), 403
 
-        current_time = datetime.utcnow()
+#     # Check if an image file is provided in the request
+#     imgur_link = post.image
+#     if 'file' in request.files:
+#         image_file = request.files['file']
+#         if image_file and allowed_file(image_file.filename):
+#             filename = secure_filename(image_file.filename)
+#             image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+#             image_file.save(image_path)
+#             imgur_response = upload_image_to_imgur(image_path)
 
-        new_post = Post(
-            title=title,
-            category=category,
-            description=description,
-            user_id=user_id,
-            time=current_time,
-            image=imgur_link  # Assign the imgur link if it exists
-        )
+#             if imgur_response:
+#                 imgur_link = imgur_response['link']
+#             else:
+#                 return jsonify({'message': 'Image upload to Imgur failed'}), 500
+#         else:
+#             return jsonify({'message': 'File upload failed. Allowed file extensions: png, jpg, jpeg, gif'}), 400
 
-        db.session.add(new_post)
-        db.session.commit()
+#     # Update the post's attributes
+#     post.title = request.form.get('title', post.title)
+#     post.category = request.form.get('category', post.category)
+#     post.description = request.form.get('description', post.description)
+#     post.image = imgur_link
 
-        access_token = create_access_token(identity=current_user.id)
+#     db.session.commit()
 
-        response = make_response(jsonify({'message': 'Post created successfully'}), 201)  # Use make_response
-        response.headers['Authorization'] = f'Bearer {access_token}'
-
-        return redirect(url_for('home'))
-
-    return render_template('post.html')
-
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
-
-def upload_image_to_imgur(image_file):
-    try:
-        response = imgur_client.upload_from_path(image_file)
-        return response
-    except Exception as e:
-        print(f'Error uploading image to Imgur: {str(e)}')
-        return None
+#     return jsonify({'message': 'Post edited successfully'}), 200
 
 
 
 
-@app.route('/post/edit/<int:post_id>', methods=['PUT'])
-@jwt_required()
-def edit_post(post_id):
-    # Check if the post exists
-    post = Post.query.get(post_id)
 
-    if not post:
-        return jsonify({'message': 'Post not found'}), 404
-
-    # Check if the user is authorized to edit the post
-    user_email = request.form.get('email')  # You might need to adapt this based on your request format
-    user = User.query.filter_by(email=user_email).first()
-
-    if not user:
-        return jsonify({'message': 'User not found'}), 404
-
-    # Check if the user is the author of the post or has admin privileges
-    if post.user_id != user.id and not user.admin:
-        return jsonify({'message': 'Unauthorized to edit this post'}), 403
-
-    # Check if an image file is provided in the request
-    imgur_link = post.image
-    if 'file' in request.files:
-        image_file = request.files['file']
-        if image_file and allowed_file(image_file.filename):
-            filename = secure_filename(image_file.filename)
-            image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            image_file.save(image_path)
-            imgur_response = upload_image_to_imgur(image_path)
-
-            if imgur_response:
-                imgur_link = imgur_response['link']
-            else:
-                return jsonify({'message': 'Image upload to Imgur failed'}), 500
-        else:
-            return jsonify({'message': 'File upload failed. Allowed file extensions: png, jpg, jpeg, gif'}), 400
-
-    # Update the post's attributes
-    post.title = request.form.get('title', post.title)
-    post.category = request.form.get('category', post.category)
-    post.description = request.form.get('description', post.description)
-    post.image = imgur_link
-
-    db.session.commit()
-
-    return jsonify({'message': 'Post edited successfully'}), 200
-
-
-
-@app.route('/post/delete/<int:post_id>', methods=['DELETE'])
-@jwt_required()
-def delete_post(post_id):
-    # Check if the post exists
-    post = Post.query.get(post_id)
-
-    if not post:
-        return jsonify({'message': 'Post not found'}), 404
-
-    user_id = request.json.get('user_id')
-
-    if not user_id:
-        return jsonify({'message': 'User ID is required in the request'}), 400
-
-    user = User.query.get(user_id)
-
-    if not user:
-        return jsonify({'message': 'User not found'}), 404
-
-    if post.user_id != user.id:
-        return jsonify({'message': 'Unauthorized to delete this post'}), 403
-
-    # Delete associated comments first
-    Comment.query.filter_by(post_id=post.id).delete()
-
-    # Remove the post from the database
-    db.session.delete(post)
-    db.session.commit()
-
-    return jsonify({'message': 'Post and associated comments deleted successfully'})
-
-
-
-@app.route('/', methods=['GET','POST'])
-@app.route('/home', methods=['GET', 'POST'])
-def home():
+@app.route('/posts', methods=['GET'])
+def get_all_posts():
     # Query all posts from the database
     posts = Post.query.all()
 
@@ -259,14 +175,191 @@ def home():
         }
         post_list.append(post_data)
 
+    return jsonify(post_list)
+
+
+
+@app.route('/post', methods=['GET', 'POST'])
+@login_required
+def post():
+    if request.method == 'POST':
+        title = request.form['title']
+        category = request.form['category']
+        description = request.form['description']
+        user_id = current_user.id  # Get the current user's ID
+
+        imgbb_image_url = None  # Initialize imgbb_image_url to None
+
+        if 'file' in request.files:
+            image_file = request.files['file']
+            if image_file and allowed_file(image_file.filename):
+                filename = secure_filename(image_file.filename)
+                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image_file.save(image_path)
+
+                imgbb_image_url = upload_image_to_imgbb(image_path)
+
+        current_time = datetime.utcnow()
+
+        new_post = Post(
+            title=title,
+            category=category,
+            description=description,
+            user_id=user_id,
+            time=current_time,
+            image=imgbb_image_url  # Assign the ImgBB image link if it exists
+        )
+
+        db.session.add(new_post)
+        db.session.commit()
+
+        access_token = create_access_token(identity=current_user.id)
+
+        response = make_response(jsonify({'message': 'Post created successfully'}), 201)  # Use make_response
+        response.headers['Authorization'] = f'Bearer {access_token}'
+
+        return redirect(url_for('home'))
+
+    return render_template('post.html')
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+def upload_image_to_imgbb(image_file_path):
+    try:
+        # Define the ImgBB API endpoint for image upload
+        imgbb_upload_url = 'https://api.imgbb.com/1/upload'
+
+        # Set up the parameters for the ImgBB API request
+        params = {
+            'key': 'bb3c04e726776d171fb92035dfb747cf'  # Replace with your actual ImgBB API key
+        }
+
+        # Send the POST request to upload the image to ImgBB
+        response = requests.post(imgbb_upload_url, params=params, files={'image': open(image_file_path, 'rb')})
+
+        if response.status_code == 200:
+            imgbb_image_url = response.json()['data']['url']
+            return imgbb_image_url
+        else:
+            return None
+    except Exception as e:
+        print(f'Error uploading image to ImgBB: {str(e)}')
+        return None
+
+
+
+
+
+@app.route('/post/edit/<int:post_id>', methods=['POST', 'PUT'])
+@login_required
+def edit_post(post_id):
+    # Check if the post exists
+    post = Post.query.get(post_id)
+
+    if not post:
+        return jsonify({'message': 'Post not found'}), 404
+
+    # Check if the user is authorized to edit the post
+    user_id = current_user.id
+
+    if post.user_id != user_id and not current_user.admin:
+        return jsonify({'message': 'Unauthorized to edit this post'}), 403
+
+    if request.method == 'POST':
+        # Get the values from the form fields
+        title = request.form.get('title', post.title)
+        category = request.form.get('category', post.category)
+        description = request.form.get('description', post.description)
+
+        imgbb_image_url = post.image  # Initialize imgbb_image_url to the existing image URL
+
+        if 'file' in request.files:
+            image_file = request.files['file']
+            if image_file and allowed_file(image_file.filename):
+                filename = secure_filename(image_file.filename)
+                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image_file.save(image_path)
+
+                imgbb_image_url = upload_image_to_imgbb(image_path)
+
+                if not imgbb_image_url:
+                    return jsonify({'message': 'Image upload to ImgBB failed'}), 500
+
+        # Update the post's attributes
+        post.title = title
+        post.category = category
+        post.description = description
+        post.image = imgbb_image_url
+        post.time = datetime.now()  # Update the time to the current time
+        post.admin = current_user.admin  # Update the admin to the current user's admin status
+
+        db.session.commit()
+
+        access_token = create_access_token(identity=current_user.id)
+
+        response = make_response(jsonify({'message': 'Post edited successfully'}), 200)
+        response.headers['Authorization'] = f'Bearer {access_token}'
+
+        javascript_code = """
+        <script>
+            setTimeout(function() {
+                location.reload();
+            }, 1000);  // Refresh after 1 second (adjust as needed)
+        </script>
+        """
+
+    return render_template('detail.html', post=post)
+
+
+
+
+
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/home', methods=['GET', 'POST'])
+def home():
+    # Query all posts and related user information from the database
+    posts = db.session.query(Post, User).join(User).all()
+
+    # Create a list to store post data
+    post_list = []
+
+    # Iterate through the posts and append their data to the list
+    for post, user in posts:
+        post_data = {
+            'id': post.id,
+            'title': post.title,
+            'category': post.category,
+            'time': post.time.strftime('%Y-%m-%d %H:%M:%S'),  # Format timestamp as a string
+            'image': post.image,
+            'description': post.description,
+            'user_id': post.user_id,
+            'username': user.username,  # Include the username from the User model
+            'profile_pic': user.profilepic,  # Include the profile picture from the User model
+        }
+        post_list.append(post_data)
+
     # Pass the post data to the 'home.html' template
     return render_template('home.html', posts=post_list)
-
-
 # ///////////endpost/////////////
 
+@app.route('/post/<int:post_id>', methods=['GET'])
+def view_post(post_id):
+    post = Post.query.get(post_id)
 
-
+    if post:
+        post = {
+            'id': post.id,
+            'title': post.title,
+            'category': post.category,
+            'time': post.time.strftime("%d/%m/%Y"),
+            'image': post.image,
+            'description': post.description,
+            'user_id': post.user_id,
+        }
+        return render_template('detail.html',post=post)
+    else:
+        return jsonify({'error': 'Post not found'}), 404
 
 
 # /////////user registration////////////
@@ -291,52 +384,10 @@ def find_user_by_id(user_id):
         return jsonify({'message': 'User not found'}), 404
 
 
-@app.route('/users', methods=['GET'])
-def get_all_users():
-    try:
-        # Query all users from the User table
-        users = User.query.all()
-
-        # Create a list to store user data
-        user_list = []
-
-        # Iterate through the users and append their data to the list
-        for user in users:
-            user_data = {
-                'id': user.id,
-                'username': user.username,
-                'email': user.email,
-                'name': user.name,
-                # 'public_id': user.public_id,
-                'admin': user.admin,
-                'profilepic': user.profilepic,
-                'password': user.password,
-            }
-            user_list.append(user_data)
-
-        # Return the list of users as JSON
-        return jsonify({'users': user_list})
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-
-
-
-
-
-
-
-
 
 @app.route('/contact', methods=['GET','POST'])
 def contact():
     return render_template('contact.html')
-
-@app.route('/detail/<id>', methods=['GET','POST'])
-def detail():
-    return render_template('detail.html')
-
 
 
 @app.route('/logout', methods=['GET'])
@@ -346,29 +397,6 @@ def logout():
     flash("You have been logged out.", "success")
     return redirect(url_for('login'))  # Redirect to the login page
 
-
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     if request.method == 'POST':
-#         email = request.form['email']
-#         password = request.form['password']
-    
-#         user = User.query.filter_by(email=email).first()
-
-#         if user and bcrypt.check_password_hash(user.password, password):
-#             # Set the 'user_is_logged_in' session variable to indicate the user is logged in
-#             session['user_is_logged_in'] = True
-
-#             # Create an access token if you want to use JWT for authorization
-#             access_token = create_access_token(identity=user.id)
-
-#             # Redirect to the home page with the access token as a query parameter
-#             return redirect(url_for('home', access_token=access_token))
-
-#         return jsonify({'message': 'Invalid username or password'}), 400  # Return an error message
-
-#     # Handle GET requests by rendering the login form
-#     return render_template('login.html')
 
 
 # Assuming you have already configured and initialized Flask-Login and Flask-JWT-Extended
@@ -449,88 +477,6 @@ def signup():
 
 # /////////////reset_password//////////
 
-# @app.route('/forget', methods=['POST'])
-# def request_reset_password():
-#     data = request.get_json()
-#     email = data.get('email')
-#     user = User.query.filter_by(email=email).first()
-
-#     if not user:
-#         return jsonify({'message': 'Email not found'}), 400
-
-#     # Generate a unique reset token
-#     reset_token = secrets.token_urlsafe(32)
-
-#     # Store the reset token in the database
-#     reset_token_entry = ResetToken(user_id=user.id, token=reset_token)
-#     db.session.add(reset_token_entry)
-#     db.session.commit()
-
-#     # Send the reset token to the user's email with HTML and CSS styling
-#     reset_link = f"http://localhost:5000/reset_password?token={reset_token}"  # Update URL accordingly
-
-#     # Create an HTML email with CSS styling
-#     msg = Message('Password Reset', recipients=[email])
-#     msg.html = f"""
-#      <html>
-#       <head>
-#         <style>
-#             /* Add your CSS styling here */
-#             body {{
-#                 font-family: Arial, sans-serif;
-#                 background-color: #f5f5f5;
-#                 margin: 0;
-#                 padding: 0;
-#             }}
-#             .container {{
-#                 max-width: 600px;
-#                 margin: 0 auto;
-#                 padding: 20px;
-#             }}
-#             .content {{
-#                 background-color: #ffffff;
-#                 padding: 20px;
-#                 border-radius: 5px;
-#             }}
-#             .button {{
-#                 display: inline-block;
-#                 background-color: #007BFF;
-#                 color: #fff;
-#                 padding: 12px 24px;
-#                 border-radius: 5px;
-#                 text-decoration: none;
-#                 font-weight: bold;
-#             }}
-#             .button:hover {{
-#                 background-color: #0056b3;
-#             }}
-#             .message {{
-#                 color: #555;
-#             }}
-#         </style>
-#     </head>
-#     <body>
-#         <div class="container">
-#             <div class="content">
-#                 <h2>Password Reset</h2>
-#                 <p class="message">You've requested a password reset. Click the button below to reset your password:</p>
-#                 <a class="button" href="{reset_link}">Reset Password</a>
-#                 <p class="message" style="color: white;">Please note that this reset link will expire after 3 hours.</p>
-#             </div>
-#         </div>
-#      </body>
-#     </html>
-#     """
- 
-
-
-#     try:
-#         mail.send(msg)  # Send the email
-#         return jsonify({'message': 'Password reset email sent'})
-#     except Exception as e:
-#         # Log the error
-#         traceback.print_exc()
-#         return jsonify({'message': f'Email not sent: {str(e)}'}), 500
 
 
 
@@ -555,19 +501,55 @@ def forget():
             # Create an HTML email with CSS styling
             msg = Message('Password Reset', recipients=[email])
             msg.html = f"""
-            <html>
-            <head>
-                <style>
-                    /* Add your CSS styling here */
-                </style>
-            </head>
-            <body>
+     <html>
+      <head>
+        <style>
+            /* Add your CSS styling here */
+            body {{
+                font-family: Arial, sans-serif;
+                background-color: #f5f5f5;
+                margin: 0;
+                padding: 0;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+            }}
+            .content {{
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 5px;
+            }}
+            .button {{
+                display: inline-block;
+                background-color: #007BFF;
+                color: #fff;
+                padding: 12px 24px;
+                border-radius: 5px;
+                text-decoration: none;
+                font-weight: bold;
+            }}
+            .button:hover {{
+                background-color: #0056b3;
+            }}
+            .message {{
+                color: #555;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="content">
                 <h2>Password Reset</h2>
-                <p>You've requested a password reset. Click the button below to reset your password:</p>
-                <a href="{reset_link}">Reset Password</a>
-            </body>
-            </html>
-            """
+                <p class="message">You've requested a password reset. Click the button below to reset your password:</p>
+                <a class="button" href="{reset_link}">Reset Password</a>
+                <p class="message" style="color: white;">Please note that this reset link will expire after 3 hours.</p>
+            </div>
+        </div>
+     </body>
+    </html>
+    """
 
             try:
                 mail.send(msg)  # Send the email
@@ -580,6 +562,8 @@ def forget():
             flash('Email not found. Please enter a valid email address.', 'error')
 
     return render_template('forget.html')
+
+
 
 @app.route('/reset', methods=['GET', 'POST'])
 def reset():
@@ -609,35 +593,6 @@ def reset():
 
     # Render the "reset.html" template with the token
     return render_template('reset.html', token=request.args.get('token'))
-
-# @app.route('/reset', methods=['GET', 'POST'])
-# def reset():
-#     if request.method == 'POST':
-#         data = request.form
-#         token = data.get('token')
-#         new_password = data.get('new_password')
-        
-#         reset_token_entry = ResetToken.query.filter_by(token=token).first()
-#         if not reset_token_entry:
-#             return jsonify({'message': 'Invalid reset token'}), 400
-
-#         if not reset_token_entry.is_valid():
-#             return jsonify({'message': 'Reset token has expired'}), 400
-
-#         user = User.query.get(reset_token_entry.user_id)
-
-#         # Update the user's password with the new password
-#         hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-#         user.password = hashed_password
-
-#         # Remove the used reset token from the database
-#         db.session.delete(reset_token_entry)
-#         db.session.commit()
-
-#         # Redirect the user to the login page after a successful password reset
-#         return redirect(url_for('login'))
-
-#     return render_template('reset.html')
 
 
 
