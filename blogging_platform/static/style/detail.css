@@ -13,6 +13,39 @@
     display: flex;
     justify-content: center;
 }
+
+/* Add this CSS in your stylesheet or in a <style> tag in your HTML */
+.flash-messages {
+    width: 50%;
+    margin-bottom: 10px;
+}
+
+.flash-message {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.flash-message.success {
+    background-color: #66ff99; /* Green background for success messages */
+    color: #006600; /* Dark green text color */
+    border: 1px solid #009900; /* Green border */
+}
+
+.flash-message.error {
+    background-color: #ff9999; /* Red background for error messages */
+    color: #990000; /* Dark red text color */
+    border: 1px solid #ff0000; /* Red border */
+}
+
+
+
+
+.delete-comment{
+    width: 100px;
+    background-color: red;
+    height: 30px;
+}
 .details{ 
     width: 75%;
     height: auto;
@@ -73,6 +106,9 @@
     background-color: #4CAF50;
     display: flex;
     justify-content: center;
+}
+.imageboxx{
+    margin-top: 2%;
 }
 
 .detail #imagebox{
@@ -344,6 +380,10 @@
 
 
 @media screen and (max-width: 1240px) {
+    .flash-messages {
+        width: 60%;
+    }
+    
     .details{ 
         width: 90%;
     
@@ -376,6 +416,10 @@
         display: flex;
         scroll-behavior: smooth;
         /* overflow-y: scroll; */
+    }
+    .flash-messages {
+        max-width: 680px;
+        width: 100%;
     }
 
 }
@@ -416,6 +460,9 @@
         width: 15rem;
         height: 15rem;
         border-radius: 20px;
+    }
+    .flash-messages {
+        width: 80%;
     }
     .right .tite{
         color: #031829;
@@ -481,7 +528,12 @@
     object-fit: cover;
     border-radius: 20px;
 }
-
+.imageboxx{
+    margin-top: 6%;
+}
+.flash-messages {
+    width: 80%;
+}
 .details .desc textarea{
     width: 90%;
     font-size: 17px;

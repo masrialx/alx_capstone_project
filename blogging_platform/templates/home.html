@@ -57,17 +57,19 @@
     <div class="find">
       <div class="finds">
           <div class="finds">
-              <div class="src">
-              <input type="text" class="search-input" placeholder="Search...">
-              <button class="search-button">Search</button>
-         
-              </div>
+
+            <form action="{{ url_for('home') }}" method="GET"  class="src">
+              <input type="text" class="search-input" name="search" placeholder="Search..." value="{{ search_query }}">
+              <button type="submit" class="search-button">Search</button>
+          </form>
+        
+
               <div class="category-buttons">
-                  <button class="category-button active">All</button>
-                  <button class="category-button">Design</button>
-                  <button class="category-button">Tech</button>
-                  <button class="category-button">Mobile</button>
-              </div>
+                <a href="{{ url_for('home') }}?category=All" class="category-button {% if selected_category == 'All' %}active{% endif %}">All</a>
+                <a href="{{ url_for('home') }}?category=Design" class="category-button {% if selected_category == 'Design' %}active{% endif %}">Design</a>
+                <a href="{{ url_for('home') }}?category=Tech" class="category-button {% if selected_category == 'Tech' %}active{% endif %}">Tech</a>
+            </div>
+            
            
           </div>
       </div>
@@ -77,29 +79,50 @@
     <div class="data" >
       <div class="datas">
         {% for post in posts %}
-        <a href="{{ url_for('view_post', post_id=post.id) }}">hhhh</a>
+
         <div class="datax">
-        <img src="" alt="" srcset="">
-        {% if post.image %}
-        <img src="{{ post.image }}" alt="Post Image" class="imgdata" >
-        {% endif %}
-          <!-- <img src="./image/background (2).jpg" alt="image" class="imgdata"> -->
-          <div class="comm">
+        
+            <a href="{{ url_for('view_post', post_id=post.id) }}" class="imgx">
+              {% if post.image %}
+                <img src="{{ post.image }}" alt="Post Image" class="imgdata">
+              {% else %}
+                <img src="{{ url_for('static', filename='image/img404.png') }}" alt="Image Not Found" class="imgdata">
+              {% endif %}
+            </a>
+
+           <div class="boo">
+           <div class="commx">
+            <div class="comm">
               <span class="mobile">{{ post.category }}</span>
           </div>
+           </div>
+         <div class="tittx">
           <span class="tit">
-            {{ post.title }}
+            {% set words = post.title.split() %}
+            {{ ' '.join(words[:20]) }}{% if words|length > 20 %}...{% endif %}
           </span>
+          
+         </div>
           <span class="date" >{{ post.time }}</span>
+        <div class="dess">
           <span class="desc" id="limitedText">
-            {{ post.description }}
-                  </span>
-          <div class="posts">
+            {% set words = post.description.split() %}
+            {{ ' '.join(words[:20]) }}{% if words|length > 30 %}...{% endif %}
+          </span>
+        </div>
+           </div>
+          
+           <a href="{{ url_for('view_post', post_id=post.id) }}" class="imgxx" >
+            <div class="posts">
               <img src="{{ post.profile_pic }}" alt="profile" class="postimg">
               <span class="name">{{post.username}}</span>
               <img src="{{ url_for('static', filename='image/comment-5-svgrepo-com.svg') }}" alt="" class="commx">
           </div>
+        </a>
        </div>
+       
+
+        
        {% endfor %}
 
      

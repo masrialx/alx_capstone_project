@@ -35,26 +35,37 @@
     <div class="detail">
         <div class="details">
             
-            <form class="imageboxx" method="POST" action="/post/edit/{{ post.id }}" enctype="multipart/form-data">
-                <div class="msg">
-                    <div class="success-message" id="successMessage">
-                        <p>Save successful!</p>
+            <div >
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for message in messages %}
+                            <div class="flash-message {{ 'success' if 'Comment deleted successfully' in message else 'error' }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
                     </div>
-                </div>
-               
-                <input type="text" name="title" id="titlebox" disabled="true" value="{{ post.title }}">                
+                {% endif %}
+            {% endwith %}
+            
+                
+                 <form class="imageboxx" method="POST" action="/post/edit/{{ post.id }}" enctype="multipart/form-data">
+                   
+                    <input type="text" name="title" id="titlebox" disabled="true" value="{{ post.title }}">                
                 <img src="{{ post.image }}" alt="image" id="imagebox">
                 <!-- Hidden input:file -->
                 <div class="allbtns">
                    <div>
                    <!-- Assuming this is in your Flask template (e.g., edit_post.html) -->
+                   {% if current_user.is_authenticated and (current_user.is_admin or post.user_id == current_user.id) %}
+
                    <img src="{{ url_for('static', filename='image/edit-3-svgrepo-com.svg') }}" alt="edit" id="editbtn" class="edit-button">
                    <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="edit" id="delete" class="delete-button">
                    <label for="save-checkbox">
                     <img src="{{ url_for('static', filename='image/save-svgrepo-com.svg') }}" alt="edit" class="edit-button" id="editbtn">
                     </label>
                     <img src="{{ url_for('static', filename='image/close-bold-svgrepo-com.svg') }}" alt="edit" id="close" id="editbtn" class="delete-button" style="display: none;">
-                   
+                    {% endif %}
 
                     <input type="file" name="file" id="imagefile" style="display: none;">
                     <input type="submit" id="save-checkbox" style="display: none;">
@@ -89,87 +100,126 @@
                     
                     
                 </div>
+                {% if current_user.is_authenticated and (current_user.is_admin or post.user_id == current_user.id) %}
 
                 <div class="popup-container" id="popup">
+
                     <div class="popup">
                         <p class="popup-message">Are you sure you want to delete this post?</p>
                        <div class="bb">
-                        <button class="popup-confirm-yes">Yes</button>
+                        <a href="{{ url_for('delete_post', post_id=post.id) }}" class="popup-confirm-yes" >Yes</a>
                         <button class="popup-confirm-no">No</button>
-                   
+                      
+
+
                        </div>
                     </div>
+                  
                 </div>
-
+                {% endif %}
   
             </div>
+                     
+                 </form>
+               
                 
                 <div class="boxx">
-                    <div class="comment-container">
+
+
+                    <!-- <form class="comment-container" method="post" action="/comment-form">
                         <label for="comment" class="comment-label">Leave a Comment:</label>
-                        <textarea id="comment" name="comment" class="comment-textarea" rows="4" cols="50" placeholder="Write your comment here..."></textarea>
+                        <textarea id="comment" name="text" class="comment-textarea" rows="4" cols="50" placeholder="Write your comment here..."></textarea>
                         <button type="submit" class="comment-button">Submit</button>
-                    </div>
+                    </form>
+                   
+                    -->
+                    <form class="comment-container" method="post" action="/create_comment/{{ post.id }}" enctype="multipart/form-data">
+                        <label for="comment" class="comment-label">Leave a Comment:</label>
+                        <textarea id="comment" name="text" class="comment-textarea" rows="4" cols="50" placeholder="Write your comment here..."></textarea>
+                        <button type="submit" class="comment-button">Submit</button>
+                    </form>
+                    
 
+                    
                     <div class="comment-section">
-
-                        <div class="comment">
-                            <img src="{{ url_for('static', filename='image/profile.jpg') }}" alt="Profile Picture" class="comment-profile-pic">
+                        {% for comment in comments %}
+                        <!-- <form class="comment" method="post" action="/delete_comment/{{ post.id }}">
+                            <img src="{{ comment.user_profilepic }}" alt="Profile Picture" class="comment-profile-pic">
                             <div class="comment-details">
-                                <p class="comment-author">John Doe</p>
-                                <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
+                                <p class="comment-author">{{ comment.user_name }}</p>
+                              <div class="comms">
+                                <p class="comment-text">{{ comment.text }}</p>
+                                <p>{{ comment.time }}</p>
+                              </div>
                             </div>
-                            <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="" class="delete">
-                        </div>
-
-                         <div class="comment">
-                            <img src="{{ url_for('static', filename='image/profile.jpg') }}" alt="Profile Picture" class="comment-profile-pic">
+                            <button type="submit"> <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="" class="delete">
+                            </button>
+                        </form> -->
+                      
+                        <!-- <form class="comment" method="post" action="/delete_comment/{{ comment.id }}">
+                            <img src="{{ comment.user_profilepic }}" alt="Profile Picture" class="comment-profile-pic">
                             <div class="comment-details">
-                                <p class="comment-author">John Doe</p>
-                                <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
+                                <p class="comment-author">{{ comment.user_name }}</p>
+                                <div class="comms">
+                                    <p class="comment-text">{{ comment.text }}</p>
+                                    <p>{{ comment.time }}</p>
+                                </div>
                             </div>
-                            <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="" class="delete">
-                        </div>
-
-                         <div class="comment">
-                            <img src="{{ url_for('static', filename='image/profile.jpg') }}" alt="Profile Picture" class="comment-profile-pic">
+                            <button type="submit">
+                                <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="" class="delete">
+                            </button>
+                        </form> -->
+                       
+                        <form class="comment" method="post" action="/delete_comment/{{ comment.id }}">
+                            <img src="{{ comment.user_profilepic }}" alt="Profile Picture" class="comment-profile-pic">
                             <div class="comment-details">
-                                <p class="comment-author">John Doe</p>
-                                <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
+                                <p class="comment-author">{{ comment.user_name }}</p>
+                                <div class="comms">
+                                    <p class="comment-text">{{ comment.text }}</p>
+                                    <p>{{ comment.time }}</p>
+                                </div>
                             </div>
-                            <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="" class="delete">
-                        </div>
+                            
+                            <!-- <button type="submit">
+                                <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="" class="delete">
+                            </button> -->
 
-                        <div class="comment">
-                            <img src="{{ url_for('static', filename='image/profile.jpg') }}" alt="Profile Picture" class="comment-profile-pic">
-                            <div class="comment-details">
-                                <p class="comment-author">John Doe</p>
-                                <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
-                            </div>
-                            <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="" class="delete">
-                        </div>
+                            {% if current_user.is_authenticated %}
+                            {% if current_user.is_admin or post.user_id == current_user.id or comment.user_id == current_user.id %}
+                                <!-- Display the delete button -->
+                                <form class="comment-delete-form" method="post" action="/delete_comment/{{ comment.id }}">
+                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this comment?');">
+                                        <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="Delete" class="delete">
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                        
+                        
 
-                        <div class="comment">
-                            <img src="{{ url_for('static', filename='image/profile.jpg') }}" alt="Profile Picture" class="comment-profile-pic">
-                            <div class="comment-details">
-                                <p class="comment-author">John Doe</p>
-                                <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
-                            </div>
-                            <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="" class="delete">
-                        </div>
+                            <input type="hidden" name="post_id" value="{{ post_id }}">
+                        </form>
+                        
+                        
 
-                          <div class="comment">
-                            <img src="{{ url_for('static', filename='image/profile.jpg') }}" alt="Profile Picture" class="comment-profile-pic">
-                            <div class="comment-details">
-                                <p class="comment-author">John Doe</p>
-                                <p class="comment-text">Great post! Thanks for sharing this valuable information.</p>
-                            </div>
-                            <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="" class="delete">
-                        </div>
+                        
+
+
+                            <!-- {% if current_user == comment.user or current_user.is_admin %} -->
+                          
+                        <!-- {% endif %} -->
+                        <!-- </form> -->
+
+                
+
+                        {% endfor %}
+                       
+                            
+                       
                  </div>
                 </div>
      
-            </form>
+            </div>
         
    
         <div class="right">
@@ -178,26 +228,18 @@
                 <div class="lines"></div>
             </div>
             <div class="rightt">
-                <div class="rights">
-                    <img src="{{ url_for('static', filename='image/background (2).jpg') }}" alt="image">
-                    <span class="tite">
-                        To change the background color of the success message to a popular
-                    </span>
-                </div>
+                {% for related_post in related_posts %}
+                    <div class="rights">
+                        <a href="{{ url_for('view_post', post_id=related_post.id) }}">
+                            <img src="{{ related_post.image }}" alt="{{ related_post.title }}">
+                        </a>                    
+                        <span class="tite">
+                            {{ related_post.title }}
+                        </span>
+                    </div>
+                {% endfor %}
 
-                 <div class="rights">
-                    <img src="{{ url_for('static', filename='image/background (2).jpg') }}" alt="image">
-                    <span class="tite">
-                        To change the background color of the success message to a popular
-                    </span>
-                </div>
-
-                  <div class="rights">
-                    <img src="{{ url_for('static', filename='image/background (2).jpg') }}" alt="image">
-                    <span class="tite">
-                        To change the background color of the success message to a popular
-                    </span>
-                </div>
+              
             </div>
        
      

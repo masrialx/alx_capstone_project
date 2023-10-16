@@ -36,30 +36,38 @@ Contact
 
 <main class="contact">
     <div class="containery">
-        <h1 class="contact-title">Contact Us</h1>
-        <form class="contact-form" id="contact-form">
-            <label for="email" class="contact-label">Email:</label>
-            <input type="email" id="email" name="email" required class="contact-input">
-            <br>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <div class="flash-message {{ 'success' if 'Feedback submitted successfully' in message else 'error' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
-            <label for="email" class="contact-label">Title:</label>
-            <input type="email" id="email" name="title" required class="contact-input">
-            <br>
 
+        <h1 class="contact-title" >Contact Us</h1>
+        <form class="contact-form" id="contact-form" method="post" action="/contact">
+            <label for="user_email" class="contact-label">Email:</label>
+            <input type="email" id="user_email" name="email" required class="contact-input">
+            <br>
+        
+            <label for="title" class="contact-label">Title:</label>
+            <input type="text" id="title" name="title" required class="contact-input">
+            <br>
+        
             <label for="description" class="contact-label">Description:</label>
             <textarea id="description" name="description" required class="contact-textarea"></textarea>
             <br>
-
+        
             <input type="submit" value="Submit" class="contact-button">
         </form>
+        
+        
 
-        <div class="success-message" id="success-message">
-            Email sent successfully!
-        </div>
-
-        <div class="failure-message" id="failure-message">
-            Email sending failed. Please try again later.
-        </div>
     </div>
 
 </main>

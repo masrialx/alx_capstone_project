@@ -40,7 +40,18 @@ Signup
     
     <div class="containerz">
      
-         
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <div class="flash-message {{ 'success' if 'Password reset email sent' in message else 'error' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    
         <h1 class="login-title">Forget Password</h1>
         <form action="{{ url_for('forget') }}" method="POST" class="login-form" id="login-form">
             <label for="username" class="login-label">Email:</label>

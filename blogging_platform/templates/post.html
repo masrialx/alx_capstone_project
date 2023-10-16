@@ -38,6 +38,18 @@ Post
  <main>
      
     <div class="containerx">
+        {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+                <div class="flash-message {{ 'success' if 'Post created successfully' in message else 'error' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
         <h1 class="post-title">Create a New Post</h1>
         <form class="post-form" action="{{ url_for('post') }}" method="POST" enctype="multipart/form-data">
             <label for="category" class="post-label">Category:</label>

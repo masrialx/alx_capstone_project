@@ -29,7 +29,7 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = 'masrialemu404@gmail.com'
-app.config['MAIL_PASSWORD'] = 'edfk ycdz zyeh ewxt'
+app.config['MAIL_PASSWORD'] = 'fctx lfch uhff jgmt'
 app.config['MAIL_DEFAULT_SENDER'] = 'Masri'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}  # Allowed image file extensions
@@ -74,7 +74,6 @@ class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
     time = db.Column(db.DateTime, nullable=False)
-    
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
 
@@ -98,58 +97,6 @@ IMGUR_CLIENT_ID = 'f4b1b04c693195a'
 IMGUR_CLIENT_SECRET = '81d18bcbe5d1ab6068bbd993b193f2946e9ccbab'
 
 imgur_client = ImgurClient(IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET)
-
-
-
-
-
-# @app.route('/post/edit/<int:post_id>', methods=['PUT'])
-# @jwt_required()
-# def edit_post(post_id):
-#     # Check if the post exists
-#     post = Post.query.get(post_id)
-
-#     if not post:
-#         return jsonify({'message': 'Post not found'}), 404
-
-#     # Check if the user is authorized to edit the post
-#     user_email = request.form.get('email')  # You might need to adapt this based on your request format
-#     user = User.query.filter_by(email=user_email).first()
-
-#     if not user:
-#         return jsonify({'message': 'User not found'}), 404
-
-#     # Check if the user is the author of the post or has admin privileges
-#     if post.user_id != user.id and not user.admin:
-#         return jsonify({'message': 'Unauthorized to edit this post'}), 403
-
-#     # Check if an image file is provided in the request
-#     imgur_link = post.image
-#     if 'file' in request.files:
-#         image_file = request.files['file']
-#         if image_file and allowed_file(image_file.filename):
-#             filename = secure_filename(image_file.filename)
-#             image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-#             image_file.save(image_path)
-#             imgur_response = upload_image_to_imgur(image_path)
-
-#             if imgur_response:
-#                 imgur_link = imgur_response['link']
-#             else:
-#                 return jsonify({'message': 'Image upload to Imgur failed'}), 500
-#         else:
-#             return jsonify({'message': 'File upload failed. Allowed file extensions: png, jpg, jpeg, gif'}), 400
-
-#     # Update the post's attributes
-#     post.title = request.form.get('title', post.title)
-#     post.category = request.form.get('category', post.category)
-#     post.description = request.form.get('description', post.description)
-#     post.image = imgur_link
-
-#     db.session.commit()
-
-#     return jsonify({'message': 'Post edited successfully'}), 200
-
 
 
 
@@ -213,6 +160,11 @@ def post():
         db.session.add(new_post)
         db.session.commit()
 
+        if new_post.id:  # Check if the post was successfully added to the database
+            flash('Post created successfully', 'success')
+        else:
+            flash('Failed to create the post', 'error')
+
         access_token = create_access_token(identity=current_user.id)
 
         response = make_response(jsonify({'message': 'Post created successfully'}), 201)  # Use make_response
@@ -248,78 +200,23 @@ def upload_image_to_imgbb(image_file_path):
         return None
 
 
-
-
-
-@app.route('/post/edit/<int:post_id>', methods=['POST', 'PUT'])
-@login_required
-def edit_post(post_id):
-    # Check if the post exists
-    post = Post.query.get(post_id)
-
-    if not post:
-        return jsonify({'message': 'Post not found'}), 404
-
-    # Check if the user is authorized to edit the post
-    user_id = current_user.id
-
-    if post.user_id != user_id and not current_user.admin:
-        return jsonify({'message': 'Unauthorized to edit this post'}), 403
-
-    if request.method == 'POST':
-        # Get the values from the form fields
-        title = request.form.get('title', post.title)
-        category = request.form.get('category', post.category)
-        description = request.form.get('description', post.description)
-
-        imgbb_image_url = post.image  # Initialize imgbb_image_url to the existing image URL
-
-        if 'file' in request.files:
-            image_file = request.files['file']
-            if image_file and allowed_file(image_file.filename):
-                filename = secure_filename(image_file.filename)
-                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                image_file.save(image_path)
-
-                imgbb_image_url = upload_image_to_imgbb(image_path)
-
-                if not imgbb_image_url:
-                    return jsonify({'message': 'Image upload to ImgBB failed'}), 500
-
-        # Update the post's attributes
-        post.title = title
-        post.category = category
-        post.description = description
-        post.image = imgbb_image_url
-        post.time = datetime.now()  # Update the time to the current time
-        post.admin = current_user.admin  # Update the admin to the current user's admin status
-
-        db.session.commit()
-
-        access_token = create_access_token(identity=current_user.id)
-
-        response = make_response(jsonify({'message': 'Post edited successfully'}), 200)
-        response.headers['Authorization'] = f'Bearer {access_token}'
-
-        javascript_code = """
-        <script>
-            setTimeout(function() {
-                location.reload();
-            }, 1000);  // Refresh after 1 second (adjust as needed)
-        </script>
-        """
-
-    return render_template('detail.html', post=post)
-
-
-
-
-
-@app.route('/', methods=['GET', 'POST'])
 @app.route('/home', methods=['GET', 'POST'])
 def home():
-    # Query all posts and related user information from the database
-    posts = db.session.query(Post, User).join(User).all()
+    # Get the selected category from the request
+    selected_category = request.args.get('category', 'All')
+    
+    # Get the search query from the request
+    search_query = request.args.get('search', '')
+
+    # Query posts based on the selected category
+    if selected_category == 'All':
+        posts = db.session.query(Post, User).join(User).all()
+    else:
+        posts = db.session.query(Post, User).join(User).filter(Post.category == selected_category).all()
+
+    # Filter posts containing the search term in the title
+    if search_query:
+        posts = [post for post in posts if search_query.lower() in post.Post.title.lower()]
 
     # Create a list to store post data
     post_list = []
@@ -339,31 +236,42 @@ def home():
         }
         post_list.append(post_data)
 
-    # Pass the post data to the 'home.html' template
-    return render_template('home.html', posts=post_list)
+    # Reverse the order of post_list to display new posts at the beginning
+    post_list = post_list[::-1]
+
+    # Pass the post data, selected category, and search query to the 'home.html' template
+    return render_template('home.html', posts=post_list, selected_category=selected_category, search_query=search_query)
+
+
+
 # ///////////endpost/////////////
 
-@app.route('/post/<int:post_id>', methods=['GET'])
-def view_post(post_id):
-    post = Post.query.get(post_id)
 
+@app.route('/delete_post/<int:post_id>', methods=['GET'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get(post_id)
+    
     if post:
-        post = {
-            'id': post.id,
-            'title': post.title,
-            'category': post.category,
-            'time': post.time.strftime("%d/%m/%Y"),
-            'image': post.image,
-            'description': post.description,
-            'user_id': post.user_id,
-        }
-        return render_template('detail.html',post=post)
+        # Check if the current user is either the post owner or an admin
+        if current_user.admin or post.user_id == current_user.id:
+            # If the user has permission, delete the post
+            db.session.delete(post)
+            db.session.commit()
+            flash('Post deleted successfully.', 'success')
+        else:
+            flash('Unauthorized to delete this post', 'error')
     else:
-        return jsonify({'error': 'Post not found'}), 404
+        flash('Post not found.', 'error')
+
+    return redirect(url_for('home'))
+
 
 
 # /////////user registration////////////
  
+
+
 @app.route('/users/<int:user_id>', methods=['GET'])
 def find_user_by_id(user_id):
     user = User.query.get(user_id)
@@ -383,11 +291,6 @@ def find_user_by_id(user_id):
     else:
         return jsonify({'message': 'User not found'}), 404
 
-
-
-@app.route('/contact', methods=['GET','POST'])
-def contact():
-    return render_template('contact.html')
 
 
 @app.route('/logout', methods=['GET'])
@@ -477,6 +380,69 @@ def signup():
 
 # /////////////reset_password//////////
 
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    if request.method == 'POST':
+        user_email = request.form['email']
+        title = request.form['title']
+        description = request.form['description']
+
+        if not user_email or not title or not description:
+            flash('Please fill in all fields.', 'error')
+        else:
+            # Send email with feedback
+            msg = Message('Feedback', recipients=['feedback@example.com'])
+            msg.html = f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+        }}
+        .container {{
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }}
+        h1 {{
+            text-align: center;
+            color: #333;
+        }}
+        .field-label {{
+            font-weight: bold;
+        }}
+        .field-value {{
+            color: #007bff;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Feedback Received</h1>
+        <p class="field-label">From:</p>
+        <p class="field-value">{user_email}</p>
+        <p class="field-label">Title:</p>
+        <p class="field-value">{title}</p>
+        <p class="field-label">Description:</p>
+        <p class="field-value">{description}</p>
+    </div>
+</body>
+</html>
+"""
+            try:
+                mail.send(msg)
+                flash('Feedback submitted successfully. Thank you!', 'success')
+            except Exception as e:
+                flash('An error occurred while sending feedback. Please try again later.', 'error')
+
+            return redirect(url_for('contact'))
+
+    return render_template('contact.html')
 
 
 
@@ -596,6 +562,7 @@ def reset():
 
 
 
+
 # /////////////end reset_password//////////
 
 
@@ -604,82 +571,170 @@ def reset():
 
 
 
-@app.route('/comment', methods=['POST'])
-@jwt_required()
-def create_comment():
-    data = request.get_json()
-
-    user_id = data.get('user_id')
-    post_id = data.get('post_id')
-    text = data.get('text')
-
-    if not all([user_id, post_id, text]):
-        return jsonify({'message': 'Missing required data in the request'}), 400
-
-    user = User.query.get(user_id)
-    post = Post.query.get(post_id)
-
-    if not user or not post:
-        return jsonify({'message': 'User or Post not found'}), 404
-
-    current_time = datetime.utcnow()  # Get the current timestamp
-
-    new_comment = Comment(
-        text=text,
-        time=current_time,  # Set the current timestamp
-        user_id=user.id,
-        post_id=post.id
-    )
-
-    db.session.add(new_comment)
-    db.session.commit()
-
-    return jsonify({'message': 'Comment created successfully'}), 201
-
-
-
-@app.route('/post/<int:post_id>/comments', methods=['GET'])
-@jwt_required()
-def get_comments_for_post(post_id):
+@app.route('/post/edit/<int:post_id>', methods=['POST', 'PUT'])
+@login_required
+def edit_post(post_id):
     # Check if the post exists
     post = Post.query.get(post_id)
 
     if not post:
         return jsonify({'message': 'Post not found'}), 404
 
-    # Retrieve comments for the specified post
-    comments = Comment.query.filter_by(post_id=post.id).all()
+    # Check if the user is authorized to edit the post
+    user_id = current_user.id
 
-    # Serialize comments to JSON
-    comments_data = [
-        {
+    if post.user_id != user_id and not current_user.admin:
+        return jsonify({'message': 'Unauthorized to edit this post'}), 403
+
+    if request.method in ['POST', 'PUT']:
+        # Get the values from the form fields
+        title = request.form.get('title', post.title)
+        category = request.form.get('category', post.category)
+        description = request.form.get('description', post.description)
+
+        imgbb_image_url = post.image  # Initialize imgbb_image_url to the existing image URL
+
+        if 'file' in request.files:
+            image_file = request.files['file']
+            if image_file and allowed_file(image_file.filename):
+                filename = secure_filename(image_file.filename)
+                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image_file.save(image_path)
+
+                imgbb_image_url = upload_image_to_imgbb(image_path)
+
+                if not imgbb_image_url:
+                    return jsonify({'message': 'Image upload to ImgBB failed'}), 500
+
+        try:
+            # Update the post's attributes
+            post.title = title
+            post.category = category
+            post.description = description
+            post.image = imgbb_image_url
+            post.time = datetime.now()  # Update the time to the current time
+            post.admin = current_user.admin  # Update the admin to the current user's admin status
+
+            db.session.commit()
+
+            access_token = create_access_token(identity=current_user.id)
+
+            response = make_response(jsonify({'message': 'Post edited successfully'}), 200)
+            response.headers['Authorization'] = f'Bearer {access_token}'
+            return redirect(url_for('view_post', post_id=post_id))
+            # javascript_code = """
+            # <script>
+            #     setTimeout(function() {
+            #         location.reload();
+            #     }, 1000);  // Refresh after 1 second (adjust as needed)
+            # </script>
+            # """
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            error_message = str(e)
+            print(f"Error while editing the post: {error_message}")
+            return jsonify({'message': 'Error while editing the post'}), 500
+
+    return render_template('detail.html', post=post)
+
+
+@app.route('/post/<int:post_id>', methods=['GET'])
+def view_post(post_id):
+    post = Post.query.get(post_id)
+    user_id = None
+
+    if current_user.is_authenticated:
+        user_id = current_user.id
+
+    if not post:
+        return render_template('error.html', message='Post not found'), 404
+
+    comments = Comment.query.filter(Comment.post_id == post_id).all()
+    comment_data = []
+
+    for comment in comments:
+        user_name = comment.author.name if comment.author else None
+        user_profilepic = comment.author.profilepic if comment.author else None
+
+        comment_info = {
             'id': comment.id,
             'text': comment.text,
             'time': comment.time.strftime('%Y-%m-%d %H:%M:%S'),
-            'user_id': comment.user_id
+            'user_id': comment.user_id,
+            'post_id': comment.post_id,
+            'user_name': user_name,
+            'user_profilepic': user_profilepic
         }
-        for comment in comments
-    ]
 
-    return jsonify({'comments': comments_data})
+        comment_data.append(comment_info)
 
-@app.route('/comment/<int:comment_id>', methods=['DELETE'])
-@jwt_required()
+    # Determine the category of the currently viewed post
+    post_category = post.category
+
+    # Query related posts in the same category (excluding the currently viewed post)
+    related_posts = Post.query.filter(Post.category == post_category, Post.id != post_id).limit(3).all()
+
+    return render_template('detail.html', post=post, user_id=user_id, comments=comment_data, related_posts=related_posts)
+
+
+
+@app.route('/create_comment/<int:post_id>', methods=['POST'])
+@login_required
+def create_comment(post_id):
+    if request.method == 'POST':
+        text = request.form.get('text')
+        # Assuming you get user_id from the current_user
+        user_id = current_user.id
+
+        # Check if the post with the provided post_id exists
+        post = Post.query.get(post_id)
+        if not post:
+            return "Post not found", 404
+
+        new_comment = Comment(
+            text=text,
+            user_id=user_id,
+            post_id=post_id,
+            time=datetime.utcnow()
+        )
+
+        db.session.add(new_comment)
+        db.session.commit()
+
+        # Now, you can redirect to the post or another page
+        return redirect(url_for('view_post', post_id=post_id))
+
+    # Handle other HTTP methods, if needed
+    return "Method not allowed", 405
+
+
+
+
+
+
+@app.route('/delete_comment/<int:comment_id>', methods=['POST'])
+@login_required
 def delete_comment(comment_id):
-    data = request.get_json()
-
+    # Retrieve the comment with the given comment_id
     comment = Comment.query.get(comment_id)
 
-    if not comment:
-        return jsonify({'message': 'Comment not found'}), 404
+    if comment:
+        post_id = comment.post.id  # Access the post id from the comment
 
-    if comment.user_id != data['user_id']:
-        return jsonify({'message': 'Unauthorized to delete this comment'}), 403
+        # Check if the current user is either the comment author or the post author
+        if comment.user_id == current_user.id or comment.post.author.id == current_user.id:
+            # If the user has permission, delete the comment
+            db.session.delete(comment)
+            db.session.commit()
+            flash('Comment deleted successfully.', 'success')
+        else:
+            flash('You do not have permission to delete this comment.', 'error')
+    else:
+        flash('Comment not found.', 'error')
 
-    db.session.delete(comment)
-    db.session.commit()
+    # Redirect back to the post with the specified post_id
+    return redirect(url_for('view_post', post_id=post_id))
 
-    return jsonify({'message': 'Comment deleted successfully'})
 
 
 @login_manager.user_loader
