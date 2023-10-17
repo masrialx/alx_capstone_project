@@ -24,8 +24,12 @@ This project is a Flask-based web application that serves as a platform for user
 - **SQLite:** The database management system used in this project.
 
 ### Screenshots or Demo
-
-
+['https://photos.app.goo.gl/sXJAhXP4hrtG5fJH7']
+['https://photos.app.goo.gl/Ayou5yCY9xZ6nmtx9']
+['https://photos.app.goo.gl/8vsjm9sjjSzTxCMd7']
+['https://photos.app.goo.gl/ZCRmeNm3Rwisgpbh8']
+['https://photos.app.goo.gl/TzKFvWJy4asrk4Er6']
+['https://photos.app.goo.gl/7eZ4uh2x7rfL5iuH7']
 
 ### Roadmap and Future Enhancements
 Future enhancements for this project may include:
