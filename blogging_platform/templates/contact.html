@@ -15,8 +15,8 @@ Contact
            <div class="list" id="list">
                <ul id="act">
                    <a href="{{ url_for('home') }}"><li >Home</li></a>
-                   <a href="{{ url_for('post') }}"><li>Post</li></a>
-                   <a href="{{ url_for('contact') }}"><li>Contact</li></a>
+                   <a href="{{ url_for('post') }}"><li >Post</li></a>
+                   <a href="{{ url_for('contact') }}"><li class="active">Contact</li></a>
                    {% if current_user.is_authenticated %}
                    <a href="{{ url_for('logout') }}" class="login" id="login">Logout</a>
                {% else %}

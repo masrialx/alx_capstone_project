@@ -9,13 +9,13 @@
     <div class="header">
        <div class="headers" id="headersx">
            <div class="logo">
-            <a href="{{ url_for('home') }}"><li >
+            <a href="{{ url_for('home') }}" ><li >
               <img src="{{ url_for('static', filename='image/Logo (2).svg') }}" alt="logo">
             </li></a>
            </div>
            <div class="list" id="list">
                <ul id="act">
-                   <a href="{{ url_for('home') }}"><li >Home</li></a>
+                   <a href="{{ url_for('home') }}"><li class="active" >Home</li></a>
                    <a href="{{ url_for('post') }}"><li>Post</li></a>
                    <a href="{{ url_for('contact') }}"><li>Contact</li></a>
                    {% if current_user.is_authenticated %}

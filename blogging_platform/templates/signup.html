@@ -20,7 +20,7 @@ Signup
                    {% if current_user.is_authenticated %}
                    <a href="{{ url_for('logout') }}" class="login" id="login">Logout</a>
                {% else %}
-                   <a href="{{ url_for('login') }}" class="login" id="login">Login</a>
+                   <a href="{{ url_for('login') }}" class="login activex" id="login" >Login</a>
                {% endif %}                   </ul>
                <div class="listbtn">
                 <button id="imglistNew" class="llx">=</button>
