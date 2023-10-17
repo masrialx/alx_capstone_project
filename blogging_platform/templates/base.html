@@ -18,12 +18,17 @@
     </title>
 </head>
 <body>
- 
-    {% block header %} 
+    {% block header %}
+        {% block header_content %}
+        {% block header_content1 %}
+   
+        {% endblock %}
+        {% endblock %}
 
-    {% endblock %} 
+    {% endblock %}
 
-    {% block main %}
+
+    {% block content %}
   
     {% endblock %}
 
@@ -55,12 +60,12 @@
     </footer>
     
 
-
+ 
     <script src="{{ url_for('static', filename='script/home.js') }}"></script>
     <script src="{{ url_for('static', filename='script/signup.js') }}"></script>
     <script src="{{ url_for('static', filename='script/detail.js') }}"></script>
     <script src="{{ url_for('static', filename='script/reset.js') }}"></script>
-   
+    
 
 
 </body>

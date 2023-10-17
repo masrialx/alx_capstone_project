@@ -1,35 +1,39 @@
 {% extends 'base.html' %}
-  {% block header %}
-  
-  <header>
+
+
+{% block header_content %}
+<header>
     <div class="header">
        <div class="headers" id="headersx">
            <div class="logo">
-            <img src="{{ url_for('static', filename='image/Logo (2).svg') }}" alt="logo">
-        </div>
+            <a href="{{ url_for('home') }}"><li >
+                <img src="{{ url_for('static', filename='image/Logo (2).svg') }}" alt="logo">
+              </li></a>           </div>
            <div class="list" id="list">
                <ul id="act">
-                   <a href="{{ url_for('home') }}"><li  class="active">Home</li></a>
+                   <a href="{{ url_for('home') }}"><li >Home</li></a>
                    <a href="{{ url_for('post') }}"><li>Post</li></a>
                    <a href="{{ url_for('contact') }}"><li>Contact</li></a>
                    {% if current_user.is_authenticated %}
                    <a href="{{ url_for('logout') }}" class="login" id="login">Logout</a>
                {% else %}
                    <a href="{{ url_for('login') }}" class="login" id="login">Login</a>
-               {% endif %}                  
-              </ul>
+               {% endif %}                   </ul>
                <div class="listbtn">
-                <img src="{{ url_for('static', filename='image/list-ul-alt-svgrepo-com.svg') }}" alt="btn" id="imglist ">
+                <button id="imglistNew" class="llx">=</button>
                </div>
            </div>
        </div>
     </div>
 
-   </header>
+</header>
 
-  {% endblock %}
- 
-  {% block main %}
+{% endblock %}
+
+
+
+{% block content %}
+
 
   <main class="bodyy">
     <div class="detail">
@@ -126,13 +130,6 @@
                 <div class="boxx">
 
 
-                    <!-- <form class="comment-container" method="post" action="/comment-form">
-                        <label for="comment" class="comment-label">Leave a Comment:</label>
-                        <textarea id="comment" name="text" class="comment-textarea" rows="4" cols="50" placeholder="Write your comment here..."></textarea>
-                        <button type="submit" class="comment-button">Submit</button>
-                    </form>
-                   
-                    -->
                     <form class="comment-container" method="post" action="/create_comment/{{ post.id }}" enctype="multipart/form-data">
                         <label for="comment" class="comment-label">Leave a Comment:</label>
                         <textarea id="comment" name="text" class="comment-textarea" rows="4" cols="50" placeholder="Write your comment here..."></textarea>
@@ -143,33 +140,7 @@
                     
                     <div class="comment-section">
                         {% for comment in comments %}
-                        <!-- <form class="comment" method="post" action="/delete_comment/{{ post.id }}">
-                            <img src="{{ comment.user_profilepic }}" alt="Profile Picture" class="comment-profile-pic">
-                            <div class="comment-details">
-                                <p class="comment-author">{{ comment.user_name }}</p>
-                              <div class="comms">
-                                <p class="comment-text">{{ comment.text }}</p>
-                                <p>{{ comment.time }}</p>
-                              </div>
-                            </div>
-                            <button type="submit"> <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="" class="delete">
-                            </button>
-                        </form> -->
                       
-                        <!-- <form class="comment" method="post" action="/delete_comment/{{ comment.id }}">
-                            <img src="{{ comment.user_profilepic }}" alt="Profile Picture" class="comment-profile-pic">
-                            <div class="comment-details">
-                                <p class="comment-author">{{ comment.user_name }}</p>
-                                <div class="comms">
-                                    <p class="comment-text">{{ comment.text }}</p>
-                                    <p>{{ comment.time }}</p>
-                                </div>
-                            </div>
-                            <button type="submit">
-                                <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="" class="delete">
-                            </button>
-                        </form> -->
-                       
                         <form class="comment" method="post" action="/delete_comment/{{ comment.id }}">
                             <img src="{{ comment.user_profilepic }}" alt="Profile Picture" class="comment-profile-pic">
                             <div class="comment-details">
@@ -180,10 +151,7 @@
                                 </div>
                             </div>
                             
-                            <!-- <button type="submit">
-                                <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="" class="delete">
-                            </button> -->
-
+                          
                             {% if current_user.is_authenticated %}
                             {% if current_user.is_admin or post.user_id == current_user.id or comment.user_id == current_user.id %}
                                 <!-- Display the delete button -->
@@ -246,7 +214,7 @@
         </div>
     </div>
     
-
+   
 </main>
 
 

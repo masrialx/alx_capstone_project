@@ -5,14 +5,14 @@ Signup
 {% endblock %}
   
 
-{% block header %}
-
+{% block header_content %}
 <header>
     <div class="header">
        <div class="headers" id="headersx">
            <div class="logo">
-               <img src="{{ url_for('static', filename='image/Logo (2).svg') }}" alt="logo">
-           </div>
+            <a href="{{ url_for('home') }}"><li >
+                <img src="{{ url_for('static', filename='image/Logo (2).svg') }}" alt="logo">
+              </li></a>           </div>
            <div class="list" id="list">
                <ul id="act">
                    <a href="{{ url_for('home') }}"><li >Home</li></a>
@@ -24,16 +24,20 @@ Signup
                    <a href="{{ url_for('login') }}" class="login" id="login">Login</a>
                {% endif %}                   </ul>
                <div class="listbtn">
-                <img src="{{ url_for('static', filename='image/list-ul-alt-svgrepo-com.svg') }}" alt="btn" id="imglist ">
+                <button id="imglistNew" class="llx">=</button>
                </div>
            </div>
        </div>
     </div>
 
 </header>
+
 {% endblock %}
 
-{% block main %}
+
+
+
+{% block content %}
 
 <main class="login">
    
