@@ -14,7 +14,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError  # Handling database-related errors
 import requests  # Making HTTP requests
 import time  # Handling time-related operations
-
+import hashlib
 
 
 from flask import Flask
@@ -124,24 +124,6 @@ class ResetToken(db.Model):
 # Helper function to load a user based on the user_id
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-
-
-
-# @app.route('/loading')
-# def loading():
-#     return render_template('loading.html')
-
-# @app.route('/process')
-# def process():
-#     # Simulate a time-consuming operation
-#     time.sleep(5)  # Sleep for 5 seconds (replace with your actual operation)
-
-#     # After processing, redirect the user to the result page
-#     return redirect(url_for('loading'))
-
-
-
 
 
 @app.route('/post', methods=['GET', 'POST'])
@@ -356,6 +338,11 @@ def login():
     return render_template('login.html')
 
 
+
+def generate_avatar(email):
+    email_hash = hashlib.md5(email.encode('utf-8')).hexdigest()
+    gravatar_url = f"https://www.gravatar.com/avatar/{email_hash}?d=identicon"
+    return gravatar_url
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -661,8 +648,7 @@ def view_post(post_id):
         comment_info = {
             'id': comment.id,
             'text': comment.text,
-            'time': comment.time.strftime('%Y-%m-%d %H:%M:%S'),
-            'user_id': comment.user_id,
+            'time': comment.time.strftime('%d/%m/%Y %H:%M:%S'),            'user_id': comment.user_id,
             'post_id': comment.post_id,
             'user_name': user_name,
             'user_profilepic': user_profilepic

@@ -89,7 +89,7 @@
                 <div class="desc">
                     
                     <div class="desc">
-                        <span class="time">{{post.time}}</span>
+                        <span class="time">{{ post.time.strftime('%d/%m/%Y') }}</span>
                         <textarea name="description" id="description" cols="30" rows="10"  style="border: none;">
                             {{ post.description }}
                         </textarea>
