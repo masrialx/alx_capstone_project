@@ -64,7 +64,13 @@
 
 .detail #titlebox{
     margin-top: 3%;
-    font-size: 30px;
+    font-size: 22px;
+    font-weight: 600;
+    color:#031829;;
+}
+.detail .boxp{
+    margin-top: 3%;
+    font-size: 22px;
     font-weight: 600;
     color:#031829;;
 }
@@ -112,6 +118,15 @@
 }
 
 .detail #imagebox{
+    margin-top: 2%;
+    /* width: 40rem; */
+    height: 70vh;
+    max-width: 680px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+}
+.detail #imageboxc{
     margin-top: 2%;
     /* width: 40rem; */
     height: 70vh;
@@ -481,6 +496,9 @@
         width: 100%;
         justify-content: center;
     }
+    .right a{
+        width: 100%;
+    }
     .rightt{
         width: 90%;
     }
@@ -531,6 +549,14 @@
 .imageboxx{
     margin-top: 6%;
 }
+.detail #imageboxc{
+    margin-top: 2%;
+    height: 60vh;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
 .flash-messages {
     width: 80%;
 }
@@ -573,6 +599,13 @@
         width: 100%;
     }
     .detail #imagebox{
+        margin-top: 2%;
+        height: 60vh;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 20px;
+    }
+    .detail #imageboxc{
         margin-top: 2%;
         height: 60vh;
         width: 100%;

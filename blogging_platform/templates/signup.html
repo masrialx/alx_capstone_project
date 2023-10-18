@@ -39,6 +39,17 @@ Signup
 <main class="signup">
    
     <div class="containers">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <div class="flash-message {{ 'success' if 'Comment deleted successfully' in message else 'error' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
         <h1>Signup</h1>
         <form action="{{ url_for('signup') }}" method="POST" class="signup-form" id="signup-form">
             <label for="username">Username:</label>

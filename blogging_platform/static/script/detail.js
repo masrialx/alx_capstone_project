@@ -100,7 +100,6 @@ deleteButton.addEventListener("click", () => {
 // Confirm delete action
 confirmYesButton.addEventListener("click", () => {
     // Handle the delete action here (e.g., delete the post)
-    console.log("Post deleted.");
     popup.style.visibility = "hidden";
 });
 

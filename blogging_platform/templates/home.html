@@ -5,7 +5,7 @@
  {% endblock %}
 
  {% block header %}
-<header>
+<header class="headerss">
     <div class="header">
        <div class="headers" id="headersx">
            <div class="logo">
@@ -38,6 +38,17 @@
        </div>
     </div>
 
+    <div class="title">
+      <div class="titles">
+         
+              <h1>Tech Insights</h1>
+               <p class="desc">
+                  Stay updated with the latest in tech. Dive into the world of gadgets, coding, AI, and more. Join us as we explore the ever-evolving landscape of technology, providing you with insights, reviews, and news to keep you at the forefront of innovation
+               </p>
+               <a href="#section1"><button>See More</button></a>
+       
+      </div>
+   </div>
 </header>
 
 {% endblock %}
@@ -50,7 +61,7 @@
       <div class="finds">
           <div class="finds">
 
-            <form action="{{ url_for('home') }}" method="GET"  class="src">
+            <form action="{{ url_for('home') }}" method="GET"  class="src" id="section1">
               <input type="text" class="search-input" name="search" placeholder="Search..." value="{{ search_query }}">
               <button type="submit" class="search-button">Search</button>
           </form>

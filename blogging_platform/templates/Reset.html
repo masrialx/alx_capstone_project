@@ -41,6 +41,17 @@ Reset Password
 
 <main class="signup reset">
     <div class="containers">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <div class="flash-message {{ 'success' if 'Comment deleted successfully' in message else 'error' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
         <h1>Reset Password</h1>
         <form action="{{ url_for('reset') }}" method="POST" class="signup-form" id="signup-form">
             <input type="hidden" id="token" name="token" value="{{ token }}" readonly>

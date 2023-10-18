@@ -40,23 +40,18 @@
         <div class="details">
             
             <div >
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <div class="flash-messages">
-                        {% for message in messages %}
-                            <div class="flash-message {{ 'success' if 'Comment deleted successfully' in message else 'error' }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
-            
-                
+           
                  <form class="imageboxx" method="POST" action="/post/edit/{{ post.id }}" enctype="multipart/form-data">
                    
                     <input type="text" name="title" id="titlebox" disabled="true" value="{{ post.title }}">                
-                <img src="{{ post.image }}" alt="image" id="imagebox">
+                <!-- <img src="{{ post.image }}" alt="image" id="imagebox">
+                -->
+                {% if post.image %}
+                <img src="{{ post.image }}" alt="Post Image" id="imagebox">
+              {% else %}
+                <img src="{{ url_for('static', filename='image/img404.png') }}" alt="Image Not Found" id="imageboxc">
+              {% endif %}
+              
                 <!-- Hidden input:file -->
                 <div class="allbtns">
                    <div>
@@ -66,7 +61,7 @@
                    <img src="{{ url_for('static', filename='image/edit-3-svgrepo-com.svg') }}" alt="edit" id="editbtn" class="edit-button">
                    <img src="{{ url_for('static', filename='image/delete-svgrepo-com.svg') }}" alt="edit" id="delete" class="delete-button">
                    <label for="save-checkbox">
-                    <img src="{{ url_for('static', filename='image/save-svgrepo-com.svg') }}" alt="edit" class="edit-button" id="editbtn">
+                    <img src="{{ url_for('static', filename='image/save-svgrepo-com.svg') }}" alt="edit" class="edit-button" id="save" style="display: none;">
                     </label>
                     <img src="{{ url_for('static', filename='image/close-bold-svgrepo-com.svg') }}" alt="edit" id="close" id="editbtn" class="delete-button" style="display: none;">
                     {% endif %}
@@ -81,8 +76,8 @@
                     </label>
                 </div>
 
-             
-                <div class="category">
+                    <p class="boxp">{{ post.title }}"</p>               
+                    <div class="category">
                     <h4 id="options" name="category" >{{post.category}}</h4>
                     <select  name="category" id="categorySelect" style="display: none;">
                         <option value="MOBILE">MOBILE</option>
@@ -112,7 +107,7 @@
                         <p class="popup-message">Are you sure you want to delete this post?</p>
                        <div class="bb">
                         <a href="{{ url_for('delete_post', post_id=post.id) }}" class="popup-confirm-yes" >Yes</a>
-                        <button class="popup-confirm-no">No</button>
+                        <button class="popup-confirm-no" >No</button>
                       
 
 
