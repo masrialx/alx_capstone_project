@@ -11,16 +11,30 @@
            <div class="logo">
             <a href="{{ url_for('home') }}" ><li >
               <img src="{{ url_for('static', filename='image/Logo (2).svg') }}" alt="logo">
+            
             </li></a>
            </div>
+           {% if user_profile %}
+           <a href="#" class="profilepic">
+               <img src="{{ user_profile.profile_pic }}" alt="profile" class="postimg" id="profilepicc">
+           </a>
+       {% else %}
+
+       <img src="{{ url_for('static', filename='image/profile1.svg') }}" alt="profile" class ="postimg add" id="profilepicc">      
+         {% endif %}
+       
            <div class="list" id="list">
                <ul id="act">
                    <a href="{{ url_for('home') }}"><li class="active" >Home</li></a>
                    <a href="{{ url_for('post') }}"><li>Post</li></a>
                    <a href="{{ url_for('contact') }}"><li>Contact</li></a>
                    {% if current_user.is_authenticated %}
+                   <div class="imgd">
+                
+                   </div>
                    <a href="{{ url_for('logout') }}" class="login" id="login">Logout</a>
                {% else %}
+
                    <a href="{{ url_for('login') }}" class="login" id="login">Login</a>
                {% endif %}
                             

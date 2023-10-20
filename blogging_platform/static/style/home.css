@@ -16,6 +16,12 @@ a{
    bottom: 28px;
    left: 10px;
 }
+#profilepicc{
+    top: 30px;
+}
+.add{
+    background-color: wheat;
+}
 .len{
     width: 5%;
     height: 20px;
@@ -61,7 +67,16 @@ a{
     display: flex;
     justify-content: center;
 }
+#profilepicc{
+    position: absolute;
+    right: 15%;
+    top: 2%;
+    border: 2px solid white;
+}
+
+
 .header .headers{
+    
     width: 80%;
     height: 10vh;
     display: flex;
@@ -453,6 +468,24 @@ footer{
 
 /* Media queries for responsiveness */
 @media screen and (max-width: 768px) {
+    #imglistNew {
+        top: 15px;
+    }
+    #profilepicc{
+        right: 20%;
+        top: 25px;
+    }
+    
+    .header #headersx {
+        width: 80%;
+        height: 10vh;
+        display: flex;
+        justify-content: space-between;
+        position: static;
+        background-color: initial;
+        align-items: center;
+    }
+  
     .container {
         flex-direction: column; /* Stack items vertically on smaller screens */
     }

@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const listItems = document.querySelectorAll("#act li");
     const loginLink = document.getElementById("login");
     const categoryButtons = document.querySelectorAll('.category-button');
-    const llx = document.querySelectorAll('llx');
+    const llx = document.getElementById("profilepicc");
+
     // const imgList = document.getElementById('imglistNew');
     // Function to toggle the visibility of the list based on window width
     function toggleVisibility() {
@@ -40,6 +41,8 @@ document.addEventListener("DOMContentLoaded", function() {
     window.addEventListener('scroll', () => {
         if (window.scrollY > 100) {
             // When scrolled past 100 pixels
+            llx.style.top = '15px';
+            imgList.style.top = '15px';
             headersx.style.position = 'fixed';
             headersx.style.display = 'flex';
             headersx.style.width = '100%';
@@ -55,6 +58,7 @@ document.addEventListener("DOMContentLoaded", function() {
             headersx.style.justifyContent = 'space-between';
             headersx.style.position = 'static';
             headersx.style.backgroundColor = 'initial';
+     
         }
     });
 

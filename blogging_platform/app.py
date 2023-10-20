@@ -17,8 +17,6 @@ import time  # Handling time-related operations
 import hashlib
 
 
-from flask import Flask
-
 # Create a Flask web application instance with the name of the current module
 app = Flask(__name__)
 
@@ -215,6 +213,9 @@ def upload_image_to_imgbb(image_file_path):
         return None
 
 
+from flask import render_template, request, redirect, url_for
+from flask_login import current_user  # Import current_user
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/home', methods=['GET', 'POST'])
 def home():
@@ -261,8 +262,18 @@ def home():
         # Reverse the order of post_list to display new posts at the beginning
         post_list = post_list[::-1]
 
-        # Pass the post data, selected category, and search query to the 'home.html' template
-        return render_template('home.html', posts=post_list, selected_category=selected_category, search_query=search_query)
+        # Check if a user is logged in
+        if current_user.is_authenticated:
+            user_profile = {
+                'username': current_user.username,
+                'profile_pic': current_user.profilepic,
+                # Include other user profile information as needed
+            }
+        else:
+            user_profile = None
+
+        # Pass the post data, selected category, search query, and user profile to the 'home.html' template
+        return render_template('home.html', posts=post_list, selected_category=selected_category, search_query=search_query, user_profile=user_profile)
     except SQLAlchemyError as e:
         # Handle database-related errors
         db.session.rollback()
@@ -275,6 +286,68 @@ def home():
         error_message = 'An unexpected error occurred: ' + str(e)
         flash(error_message, 'error')
         return render_template('home.html', posts=[], selected_category='All', search_query='')
+
+
+# @app.route('/', methods=['GET', 'POST'])
+# @app.route('/home', methods=['GET', 'POST'])
+# def home():
+#     try:
+#         # Get the selected category from the request
+#         selected_category = request.args.get('category', 'All')
+
+#         # Get the search query from the request
+#         search_query = request.args.get('search', '')
+
+#         # Query posts based on the selected category
+#         if selected_category == 'All':
+#             posts = db.session.query(Post, User).join(User).all()
+#         else:
+#             posts = db.session.query(Post, User).join(User).filter(Post.category == selected_category).all()
+
+#         # Filter posts containing the search term in the title
+#         if search_query:
+#             posts = [post for post in posts if search_query.lower() in post.Post.title.lower()]
+
+#         # Create a list to store post data
+#         post_list = []
+
+#         # Iterate through the posts and append their data to the list
+#         for post, user in posts:
+#             post_data = {
+#                 'id': post.id,
+#                 'title': post.title,
+#                 'category': post.category,
+#                 'time': post.time.strftime('%Y-%m-%d %H:%M:%S'),  # Format timestamp as a string
+#                 'image': post.image,
+#                 'description': post.description,
+#                 'user_id': post.user_id,
+#                 'username': user.username,  # Include the username from the User model
+#                 'profile_pic': user.profilepic,  # Include the profile picture from the User model
+#             }
+
+#             # Count the number of comments for each post
+#             comment_count = Comment.query.filter(Comment.post_id == post_data['id']).count()
+#             post_data['comment_count'] = comment_count
+
+#             post_list.append(post_data)
+
+#         # Reverse the order of post_list to display new posts at the beginning
+#         post_list = post_list[::-1]
+
+#         # Pass the post data, selected category, and search query to the 'home.html' template
+#         return render_template('home.html', posts=post_list, selected_category=selected_category, search_query=search_query)
+#     except SQLAlchemyError as e:
+#         # Handle database-related errors
+#         db.session.rollback()
+#         error_message = 'An error occurred while retrieving data from the database: ' + str(e)
+#         flash(error_message, 'error')
+#         return render_template('home.html', posts=[], selected_category='All', search_query='')
+
+#     except Exception as e:
+#         # Handle other unexpected errors
+#         error_message = 'An unexpected error occurred: ' + str(e)
+#         flash(error_message, 'error')
+#         return render_template('home.html', posts=[], selected_category='All', search_query='')
 
 
 @app.route('/delete_post/<int:post_id>', methods=['GET'])
@@ -385,6 +458,29 @@ def signup():
 
     return render_template('signup.html')
 
+# @app.route('/get_users', methods=['GET'])
+# def get_users():
+#     try:
+#         users = User.query.all()
+#         user_list = []
+
+#         for user in users:
+#             user_data = {
+#                 'id': user.id,
+#                 'username': user.username,
+#                 'email': user.email,
+#                 'name': user.name,
+#                 'profilepic': user.profilepic
+#                 # Add other fields you want to retrieve
+#             }
+#             user_list.append(user_data)
+
+#         return render_template('user_list.html', users=user_list)
+#     except Exception as e:
+#         flash('An error occurred while fetching user data.', 'error')
+#         app.logger.error(f'Error in get_users route: {str(e)}')
+
+#     return render_template('error.html')  # Display an error page on failure
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
